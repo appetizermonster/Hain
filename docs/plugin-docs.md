@@ -13,6 +13,7 @@
 * [hain-plugin-gif](https://github.com/Metrakit/hain-plugin-gif)
 * [hain-plugin-laravel-api](https://github.com/sewnboy/hain-plugin-laravel-api)
 * [hain-plugin-github](https://github.com/k-meissonnier/hain-plugin-github)
+* [hain-plugin-google](https://github.com/leonardosnt/hain-plugin-google)
 
 ## Guides
 
