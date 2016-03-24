@@ -10,6 +10,7 @@
 * [hain-plugin-trending](https://github.com/appetizermonster/hain-plugin-trending)
 * [hain-plugin-youtube](https://github.com/appetizermonster/hain-plugin-youtube)
 * [hain-plugin-hackernews](https://github.com/appetizermonster/hain-plugin-hackernews)
+* [hain-plugin-google-developers-api](https://github.com/Braunson/hain-plugin-google-developers-api)
 
 ## Guides
 
