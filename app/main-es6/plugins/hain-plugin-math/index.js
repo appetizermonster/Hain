@@ -3,8 +3,7 @@
 const _ = require('lodash');
 const math = require('mathjs');
 
-module.exports = (pluginContext) => {
-  const shell = pluginContext.shell;
+module.exports = ({ app }) => {
 
   function search(query, res) {
     try {
@@ -12,15 +11,17 @@ module.exports = (pluginContext) => {
       if (_.isNumber(ans) || _.isString(ans) || (_.isObject(ans) && _.has(ans, 'value'))) {
         res.add({
           title: `${query.trim()} = ${ans.toString()}`,
-          score: 0.5,
-          group: 'Math'
+          group: 'Math',
+          payload: ans.toString()
         });
       }
     } catch (e) {
     }
   }
 
-  function execute(id, payload) {}
+  function execute(id, payload) {
+    app.setInput(`=${payload}`);
+  }
 
   return { search, execute };
 };
