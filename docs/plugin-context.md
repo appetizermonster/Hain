@@ -6,6 +6,7 @@ PluginContext is a object which has following properties:
 * `toast` [Toast](plugin-context-toast.md) - Provides toast functionality
 * `shell` [Shell](plugin-context-shell.md) - Provides electron's shell commands
 * `logger` [Logger](plugin-context-logger.md) - Provides logging functionality
+* `clipboard` [Clipboard](plugin-context-clipboard.md) - Provides clipboard functionality
 
 **Example**
 ```javascript
@@ -15,6 +16,7 @@ module.exports = (pluginContext) => {
   const app = pluginContext.app;
   const toast = pluginContext.toast;
   const logger = pluginContext.logger;
+  const clipboard = pluginContext.clipboard;
   
   function startup() { ... }
   
@@ -27,6 +29,8 @@ module.exports = (pluginContext) => {
       app.close();
     } else if (id == '3') {
       logger.log('this is log');
+    } else if (id == '4') {
+      clipboard.set('Text pasted to clipboard !');
     }
   }
   
