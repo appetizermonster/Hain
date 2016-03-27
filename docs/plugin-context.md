@@ -43,3 +43,4 @@ module.exports = (pluginContext) => {
 * [Toast](plugin-context-toast.md)
 * [Shell](plugin-context-shell.md)
 * [Logger](plugin-context-logger.md)
+* [Clipboard](plugin-context-clipboard.md)
