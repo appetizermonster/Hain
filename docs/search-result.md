@@ -9,6 +9,7 @@ SearchResult is a plain object which has a following format:
 * `icon` String - Icon URL, See [Icon URL Format](icon-url-format.md) (optional, default is `icon` of package.json)
 * `redirect` String - Redirection query (optional, default is `undefined`)
 * `group` String - Result group name (optional, default is `group` of package.json)
+* `clipboard` Json - Content to paste in the clipboard (image or text) (optional, default is `undefined`)
 
   
 SearchResult object is used as a argument for [Response](response.md) object.  
@@ -21,7 +22,11 @@ function search(query, res) { // res is a Response object
     payload: {},
     title: 'Hello, World',
     desc: 'Goodbye',
-    group: 'Hello'
+    group: 'Hello',
+    clipboard: {
+      type: 'image',
+      content: 'http://example.com/image.png'
+    }
   };
   res.add(searchResult);
 }
