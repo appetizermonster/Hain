@@ -81,6 +81,17 @@ module.exports = (context) => {
     });
   });
 
+  rpc.define('copyToClipboard', function* (params) {
+    const { content, type } = params;
+    if (type === 'text') {
+      context.clipboard.set(content);
+      context.toast.enqueue('Text pasted to clipboard !');
+    } else if (type === 'image') {
+      context.clipboard.setImage(content);
+      context.toast.enqueue('Image pasted to clipboard !');
+    }
+  });
+
   rpc.define('close', function* () {
     context.app.close();
   });

@@ -27,6 +27,24 @@ module.exports = (context) => {
     }
   };
 
+  proxyHandlers.clipboard = {
+    get: (type) => context.clipboard.get(type),
+    set: (args) => {
+      const { text, type } = args;
+      context.clipboard.set(text, type);
+    },
+    getImage: (type) => context.clipboard.getImage(type),
+    setImage: (args) => {
+      const { imgUrl, type } = args;
+      context.clipboard.setImage(imgUrl, type);
+    },
+    has: (args) => {
+      const { data, type } = args;
+      context.clipboard.has(data, type);
+    },
+    clear: (type) => context.clipboard.clear(type)
+  };
+
   proxyHandlers.shell = {
     showItemInFolder: (fullPath) => shell.showItemInFolder(fullPath),
     openItem: (fullPath) => shell.openItem(fullPath),

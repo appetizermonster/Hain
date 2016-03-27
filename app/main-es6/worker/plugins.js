@@ -97,6 +97,7 @@ module.exports = (workerContext) => {
     toast: workerContext.toast,
     shell: workerContext.shell,
     logger: workerContext.logger,
+    clipboard: workerContext.clipboard,
     matchutil
   };
 

@@ -37,11 +37,21 @@ const loggerProxy = {
   log: (msg) => proxyFunc('logger', 'log', msg)
 };
 
+const clipboardProxy = {
+  get: (type = null) => proxyFunc('clipboard', 'get', type),
+  set: (text, type = null) => proxyFunc('clipboard', 'set', { text, type }),
+  getImage: (type = null) => proxyFunc('clipboard', 'getImage', type),
+  setImage: (imgUrl, type = null) => proxyFunc('clipboard', 'setImage', { imgUrl, type }),
+  has: (data = 'text', type = null) => proxyFunc('clipboard', 'has', { data, type }),
+  clear: (type = null) => proxyFunc('clipboard', 'clear', type)
+};
+
 const workerContext = {
   app: appProxy,
   toast: toastProxy,
   shell: shellProxy,
-  logger: loggerProxy
+  logger: loggerProxy,
+  clipboard: clipboardProxy
 };
 
 let plugins = null;
