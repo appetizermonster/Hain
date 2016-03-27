@@ -56,7 +56,11 @@ module.exports = (pluginContext) => {
       id: '1',
       payload: query,
       title: `You entered ${query} now`,
-      desc: `<b>${query}</b>`
+      desc: `<b>${query}</b>`,
+      clipboard: {
+        type: 'text',
+        content: query
+      }
     });
   }
 
