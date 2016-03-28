@@ -22,11 +22,7 @@ function search(query, res) { // res is a Response object
     payload: {},
     title: 'Hello, World',
     desc: 'Goodbye',
-    group: 'Hello',
-    clipboard: {
-      type: 'image',
-      content: 'http://example.com/image.png'
-    }
+    group: 'Hello'
   };
   res.add(searchResult);
 }

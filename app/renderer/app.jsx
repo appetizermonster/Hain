@@ -245,31 +245,6 @@ class AppContainer extends React.Component {
     this.refs.input.focus();
   }
 
-  displayRightButton(i) {
-    if (!this.state.results[i].clipboard) {
-      return null;
-    }
-    return <FontIcon 
-      className="fa fa-clipboard" 
-      onClick={ this.handleRightButtonClick.bind(this, i) } 
-      style={{ fontSize: 20 }} 
-      color="#009688"
-      hoverColor="#00695c">
-      </FontIcon>;
-  }
-
-  handleRightButtonClick(i, evt) {
-    evt.stopPropagation();
-    const cpData = this.state.results[i].clipboard;
-    if (cpData.content && cpData.type) {
-      const args = {
-        content: cpData.content,
-        type: cpData.type
-      };
-      rpc.call('copyToClipboard', args);
-    }
-  }
-
   parseIconUrl(iconUrl) {
     if (!_.isString(iconUrl)) {
       return null;
@@ -290,7 +265,6 @@ class AppContainer extends React.Component {
     for (let i = 0; i < results.length; ++i) {
       const result = results[i];
       const avatar = this.parseIconUrl(result.icon);
-      const rightIcon = this.displayRightButton(i);
       if (result.group !== lastGroup) {
         list.push(
           <div ref={ `header.${i}` }>
@@ -311,7 +285,6 @@ class AppContainer extends React.Component {
           onClick={ this.handleItemClick.bind(this, i) }
           onKeyDown={ this.handleKeyDown.bind(this) }
           leftAvatar={avatar}
-          rightIconButton={rightIcon}
           />
       );
     }
