@@ -36,6 +36,7 @@
   - [Toast](plugin-context-toast.md)
   - [Shell](plugin-context-shell.md)
   - [Logger](plugin-context-logger.md)
+  - [Clipboard](plugin-context-clipboard.md)
 * [SearchResult](search-result.md)
 * [Response (res)](response.md)
 * [Icon URL Format](icon-url-format.md)

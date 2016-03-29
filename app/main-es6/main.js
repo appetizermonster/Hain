@@ -28,7 +28,8 @@ require('babel-polyfill');
     server: null,
     toast: null,
     rpc: null,
-    clientLogger: null
+    clientLogger: null,
+    clipboard: null
   };
 
   co(function* () {
@@ -36,6 +37,7 @@ require('babel-polyfill');
 
     appContext.toast = require('./server/toast')(appContext);
     appContext.clientLogger = require('./server/client-logger')(appContext);
+    appContext.clipboard = require('./server/clipboard')(appContext);
     appContext.app = require('./server/app/app')(appContext);
     appContext.server = require('./server/server')(appContext);
 
