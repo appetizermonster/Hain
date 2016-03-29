@@ -16,6 +16,7 @@
 * [hain-plugin-caniuse](https://github.com/Metrakit/hain-plugin-caniuse)
 * [hain-plugin-google](https://github.com/leonardosnt/hain-plugin-google)
 * [hain-plugin-google-developers-api](https://github.com/Braunson/hain-plugin-google-developers-api)
+* [hain-plugin-bower](https://github.com/welksonramos/hain-plugin-bower)
 
 ## Guides
 
