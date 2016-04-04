@@ -25,6 +25,7 @@
 * [hain-plugin-shortcut](https://github.com/e-/hain-plugin-shortcut)
 * [hain-plugin-reddit](https://github.com/sethxd/hain-plugin-reddit)
 * [hain-plugin-stocks](https://github.com/sethxd/hain-plugin-stocks)
+* [hain-plugin-google-play](https://github.com/Braunson/hain-plugin-google-play)
 
 ## Guides
 
