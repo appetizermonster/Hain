@@ -37,7 +37,7 @@
     "lodash.set": "^4.1.0",
     "lodash.size": "^4.0.6",
     "lodash.uniq": "^4.2.1",
-    "material-ui": "^0.15.0-alpha.2",
+    "material-ui": "0.15.0-alpha.2",
     "mathjs": "^3.0.0",
     "node-persist": "0.0.10",
     "react": "^0.14.7",

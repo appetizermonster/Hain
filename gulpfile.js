@@ -8,6 +8,7 @@ const path = require('path');
 const install = require('gulp-install');
 const zip = require('gulp-zip');
 const electronInstaller = require('electron-winstaller');
+const electronDebianPkg = require('electron-installer-debian');
 const fs = require('fs');
 const del = require('del');
 const replace = require('gulp-replace');
@@ -33,12 +34,12 @@ gulp.task('renderer', ['deps', 'clean:renderer'], () => {
   return js;
 });
 
-function build(arch) {
+function build(arch, platform) {
   return new Promise((resolve, reject) => {
     packager({
       arch,
       dir: path.join(__dirname, 'app'),
-      platform: 'win32',
+      platform: platform || 'win32',
       asar: true,
       ignore: /(renderer-jsx|__tests__)/gi,
       overwrite: true,
@@ -82,6 +83,25 @@ function buildInstaller(arch) {
   });
 }
 
+function buildDebianPkg() {
+  const options = {
+    src: 'out/hain-linux-x64/',
+    dest: 'out/installers/',
+    arch: 'amd64'
+  };
+
+  return new Promise((resolve, reject) => {
+    electronDebianPkg(options, function (err) {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      }
+
+      return resolve();
+    });
+  });
+}
+
 gulp.task('build', ['renderer', 'deps'], () => {
   return build('ia32')
     .then(() => build('x64'));
@@ -90,6 +110,11 @@ gulp.task('build', ['renderer', 'deps'], () => {
 gulp.task('build-zip-ia32', ['build'], () => buildZip('ia32'));
 gulp.task('build-zip-x64', ['build'], () => buildZip('x64'));
 gulp.task('build-zip', ['build-zip-ia32', 'build-zip-x64']);
+
+gulp.task('build-debian', ['renderer'], () => {
+  return build('x64', 'linux')
+    .then(() => buildDebianPkg());
+});
 
 gulp.task('build-installer', ['build', 'build-zip'], () => {
   return buildInstaller('ia32')

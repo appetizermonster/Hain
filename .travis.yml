@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - '5'
+before_script: "cd app && npm install && cd .."
+before_deploy: "sh deploy-travis.sh"
+deploy:
+  provider: releases
+  api_key:
+    secure: BRVWuTHlENLQtFUC5ncrI5BXAOJUHrzTeC6lqSM8tDjGtiKNRXdRR05ul6tlVmRWG7pr0ZRVJIswoqmQlmA4I803lmZy97k9XJ+GX9VQ5GhFIfEcIyAOex6FE3mJ2hpxDP8jC+eVvKqAR7RTkusSwKrcSettUnkYOfVRh7JIk5tvOI57kJWPz47e8B8tMuw0XMXHLUdsIlRava0/QXX5PedupywJtG+PlNfxZnPyMZIxsdvhpvuzXdzfLKD7de2CljnNk6bs1OpHRGYOQ6Sh6jOS8b3gvmSVv4mnypc3XvmlUKv/pMDlTgI/6jIPqMKUC/FeFE62ViTB/nV44Ru+U7hmo4XRNpnW78PZBYoto+BJqHWr3dG5mN8t1om9/rkQdqYYOAB1VBq8vKYwCUHvrdKy4nP/Sn/wWtWfYor4/nsdmSEiaLkvIySbtyrcZyYu/Otw1O7wFEU2zrsdF9rMzXXQlRfegIaIcN+u3OWtD9s28CPDteUc48c39+gsCmZOifSkNKzmMKeKg3dqwpqbHmPqTJg69e0nzPW6ZvMnpXb7Oqp+SgCM+F6gCyLFfyDUB1EgLoiEBshv4vjPrmYq0uZFkQL3RPPnfG2x3+NlIMfm42MGmSxH1If0DIZr1Cnc69uH4FLusttgMSuxtkvfreH5b37mAHumA++8eU+Zovk=
+  file: "hain-${TRAVIS_TAG}.deb"
+  skip_cleanup: true
+  on:
+    tags: true
