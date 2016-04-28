@@ -27,6 +27,7 @@ const appProxy = {
   quit: () => proxyFunc('app', 'quit'),
   close: (dontRestoreFocus) => proxyFunc('app', 'close', dontRestoreFocus),
   setInput: (text) => proxyFunc('app', 'setInput', text),
+  setQuery: (query) => proxyFunc('app', 'setQuery', query),
   openPreferences: () => proxyFunc('app', 'openPreferences')
 };
 

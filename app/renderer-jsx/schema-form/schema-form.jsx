@@ -1,6 +1,8 @@
 'use strict';
 
 const lo_set = require('lodash.set');
+const lo_isString = require('lodash.isstring');
+const textutil = require('../../main-es6/utils/textutil');
 
 import React from 'react';
 import { Card, CardTitle, CardText, TextField,
@@ -15,10 +17,26 @@ const validator = new Validator();
 function findErrorMessage(errors, path) {
   const errorPath = `instance${path}`;
   for (const error of errors) {
-    if (error.property === errorPath)
-      return error.message;
+    if (error.property !== errorPath)
+      continue;
+
+    const errorType = error.name;
+    const customMessages = error.schema.errorMessages;
+    if (customMessages !== undefined) {
+      if (lo_isString(customMessages))
+        return customMessages;
+      if (customMessages[errorType])
+        return customMessages[errorType];
+    }
+    return error.message;
   }
   return undefined;
+}
+
+function wrapDescription(description) {
+  if (description === undefined)
+    return undefined;
+  return (<p><div style={{ color: '#999' }} dangerouslySetInnerHTML={{ __html: textutil.sanitize(description) }}/></p>);
 }
 
 class BooleanComponent extends React.Component {
@@ -80,13 +98,20 @@ class NumberComponent extends React.Component {
   render() {
     const { schema, name, path, errors } = this.props;
     const { val } = this.state;
-    const title = schema.title || name;
     const error = findErrorMessage(errors, path);
+    let title = schema.title || name;
+    const description = wrapDescription(schema.description);
+
+    if (title !== undefined) {
+      title = (<h5 style={{ marginBottom: '2px' }}>{title}</h5>);
+    }
 
     return (
       <div>
+        {title}
+        {description}
         <TextField name="number" value={val} errorText={error}
-                   floatingLabelText={title} fullWidth={true}
+                   fullWidth={true}
                    onChange={this.handleChange.bind(this)} />
       </div>
     );
@@ -101,13 +126,20 @@ class TextComponent extends React.Component {
 
   render() {
     const { schema, model, name, path, errors } = this.props;
-    const title = schema.title || name;
     const error = findErrorMessage(errors, path);
+    let title = schema.title || name;
+    const description = wrapDescription(schema.description);
+
+    if (title !== undefined) {
+      title = (<h5 style={{ marginBottom: '2px' }}>{title}</h5>);
+    }
 
     return (
       <div>
+        {title}
+        {description}
         <TextField name="text" value={model} errorText={error}
-                   floatingLabelText={title} fullWidth={true}
+                   fullWidth={true} style={{ marginTop: '-2px' }}
                    onChange={this.handleChange.bind(this)} />
       </div>
     );
@@ -136,16 +168,12 @@ class ArrayComponent extends React.Component {
 
   render() {
     const { schema, model, name, path, onChange, errors } = this.props;
-    const title = schema.title || name;
     const arr = model || [];
+    let title = schema.title || name;
+    const description = wrapDescription(schema.description);
 
-    let titleComponent = null;
     if (title) {
-      titleComponent = (
-        <div>
-          <h3>{title}</h3>
-        </div>
-      );
+      title = (<h4>{title}</h4>);
     }
 
     const childSchema = schema.items;
@@ -197,8 +225,11 @@ class ArrayComponent extends React.Component {
 
     return (
       <div>
-        {titleComponent}
-        {childComponents}
+        {title}
+        {description}
+        <div key="childComponents">
+          {childComponents}
+        </div>
         &nbsp;
         <div style={{ textAlign: 'left' }}>
           <RaisedButton primary={true}
@@ -214,18 +245,14 @@ class ArrayComponent extends React.Component {
 class ObjectComponent extends React.Component {
   render() {
     const { schema, model, name, path, onChange, errors } = this.props;
-    const title = schema.title || name;
     const properties = schema.properties;
     const childComponents = [];
     const obj = model || {};
+    let title = schema.title || name;
+    const description = wrapDescription(schema.description);
 
-    let titleComponent = null;
     if (title) {
-      titleComponent = (
-        <div>
-          <h3>{title}</h3>
-        </div>
-      );
+      title = (<h4>{title}</h4>);
     }
 
     for (const childName in properties) {
@@ -247,7 +274,8 @@ class ObjectComponent extends React.Component {
 
     return (
       <div>
-        {titleComponent}
+        {title}
+        {description}
         {childComponents}
       </div>
     );

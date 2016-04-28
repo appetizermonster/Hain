@@ -46,7 +46,6 @@ function launch() {
       if (!silentLaunch || isRestarted) {
         asyncutil.runWhen(() => (!mainWindow.isContentLoading() && server.isLoaded),
           () => {
-            mainWindow.clearQuery();
             mainWindow.showWindowOnCenter();
           }, 100);
       }

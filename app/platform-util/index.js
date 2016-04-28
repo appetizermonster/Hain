@@ -1,30 +1,45 @@
 'use strict';
 
-var native = /^win/.test(process.platform) ? require('./addon') : {
-  fetchFileIconAsPng: function(path, cb) {
-    cb([]);
-  },
-  saveFocus: function() {},
-  restoreFocus: function() {}
-};
+// determine native module name
+let nativeModuleName = null;
+if (process.platform === 'win32') {
+  nativeModuleName = `${process.platform}-${process.arch}`;
+}
 
-var wrapper = {};
+// find module
+let native = null;
+try {
+  const _native = require(`./${nativeModuleName}`);
+  native = _native;
+} catch (e) {
+}
 
-wrapper.fetchFileIconAsPng = function (filePath, callback) {
+// assign mock object
+if (native === null) {
+  native = {
+    fetchFileIconAsPng: (path, cb) => {
+      cb([]);
+    },
+    saveFocus: () => {},
+    restoreFocus: () => {}
+  };
+}
+
+function fetchFileIconAsPng(filePath, callback) {
   try {
     native.fetchFileIconAsPng(filePath, callback);
   } catch (e) {
     console.log(e);
   }
-};
+}
 
-wrapper.saveFocus = function () {
+function saveFocus() {
   native.saveFocus();
-};
+}
 
 
-wrapper.restoreFocus = function () {
+function restoreFocus() {
   native.restoreFocus();
-};
+}
 
-module.exports = wrapper;
+module.exports = { fetchFileIconAsPng, saveFocus, restoreFocus };

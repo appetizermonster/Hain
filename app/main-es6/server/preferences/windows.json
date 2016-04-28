@@ -3,13 +3,38 @@
   "properties": {
     "shortcut": {
       "type": "string",
-      "title": "Quick-Open Shorcut",
-      "default": "alt+space"
+      "title": "Open-Close Toggle Shorcut",
+      "description": "Please see available keys on <a href='http://electron.atom.io/docs/v0.37.7/api/accelerator/'>Here</a>",
+      "default": "alt+space",
+      "minLength": 1,
+      "errorMessages": "You must provide basic shortcut (e.g. 'alt+space')"
     },
     "clearQuery": {
       "type": "boolean",
-      "title": "Clear query after closing",
+      "title": "Clear query after window has closed",
       "default": true
+    },
+    "customQueryShortcuts": {
+      "type": "array",
+      "title": "Custom Query Shortcuts",
+      "description": "You can set your own shortcuts with custom query",
+      "items": {
+        "type": "object",
+        "properties": {
+          "shortcut": {
+            "type": "string",
+            "title": "Shortcut",
+            "minLength": 1,
+            "errorMessages": "You must provide the shortcut (e.g. 'alt+/')"
+          },
+          "query": {
+            "type": "string",
+            "title": "Custom Query",
+            "minLength": 1,
+            "errorMessages": "You must provide any query (e.g. '/g ')"
+          }
+        }
+      }
     },
     "proxy": {
       "type": "object",

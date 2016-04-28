@@ -87,6 +87,8 @@ module.exports = (pluginContext) => {
   function renderPreview(id, payload, render) {
     render('<html><body>Something</body></html>');
   }
+  
+  return { startup, search, execute, renderPreview };
 };
 ```
 

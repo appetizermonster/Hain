@@ -40,7 +40,7 @@ class AppContainer extends React.Component {
     super();
 
     this.state = {
-      input: '',
+      query: '',
       results: [],
       selectionIndex: 0,
       toastMessage: '',
@@ -48,13 +48,6 @@ class AppContainer extends React.Component {
     };
     this.toastQueue = [];
     this.lastResultTicket = -1;
-  }
-
-  clearState() {
-    this.refs.input.focus();
-    this.scrollTo(0);
-    this.setState({ input: '', selectionIndex: 0 });
-    this.search('');
   }
 
   processToast() {
@@ -77,7 +70,7 @@ class AppContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.refs.input.focus();
+    this.refs.query.focus();
     rpc.connect();
     rpc.on('on-toast', (evt, msg) => {
       const { message, duration } = msg;
@@ -86,8 +79,8 @@ class AppContainer extends React.Component {
     rpc.on('on-log', (evt, msg) => {
       console.log(msg);
     });
-    rpc.on('set-input', (evt, args) => {
-      this.setInput(args);
+    rpc.on('set-query', (evt, args) => {
+      this.setQuery(args);
     });
     rpc.on('on-result', (evt, msg) => {
       const { ticket, type, payload } = msg;
@@ -135,15 +128,16 @@ class AppContainer extends React.Component {
       this.setState({ previewHtml: html });
     });
     setInterval(this.processToast.bind(this), 200);
+    this.setQuery('');
   }
 
   componentDidUpdate(prevProps, prevState) {
     this.updatePreview();
   }
 
-  setInput(args) {
-    this.setState({ input: args, selectionIndex: 0 });
-    this.refs.input.focus();
+  setQuery(args) {
+    this.setState({ query: args, selectionIndex: 0 });
+    this.refs.query.focus();
     this.search(args);
   }
 
@@ -184,7 +178,7 @@ class AppContainer extends React.Component {
     if (item === undefined)
       return;
     if (item.redirect) {
-      this.setInput(item.redirect);
+      this.setQuery(item.redirect);
       return;
     }
 
@@ -232,12 +226,12 @@ class AppContainer extends React.Component {
   }
 
   handleEsc() {
-    const input = this.state.input;
-    if (input === undefined || input.length <= 0) {
+    const query = this.state.query;
+    if (query === undefined || query.length <= 0) {
       rpc.call('close');
       return;
     }
-    this.setInput('');
+    this.setQuery('');
   }
 
   handleEnter() {
@@ -251,7 +245,7 @@ class AppContainer extends React.Component {
     const selectionIndex = this.state.selectionIndex;
     const item = results[selectionIndex];
     if (item && item.redirect)
-      this.setInput(item.redirect);
+      this.setQuery(item.redirect);
   }
 
   handleKeyDown(evt) {
@@ -273,10 +267,10 @@ class AppContainer extends React.Component {
   }
 
   handleChange(evt) {
-    const input = this.refs.input.getValue();
-    this.setState({ input: input });
+    const query = this.refs.query.getValue();
+    this.setState({ query });
     this.scrollTo(0);
-    this.search(input);
+    this.search(query);
   }
 
   handleUpdateSelectionIndex(evt, index) {
@@ -288,7 +282,7 @@ class AppContainer extends React.Component {
   }
 
   handleKeyboardFocus(evt) {
-    this.refs.input.focus();
+    this.refs.query.focus();
   }
 
   parseIconUrl(iconUrl) {
@@ -369,14 +363,14 @@ class AppContainer extends React.Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
       <div>
-        <div key="inputWrapper" style={{ position: 'fixed', height: '40px', 'zIndex': 1000, top: 0, width: '776px' }}>
+        <div key="queryWrapper" style={{ position: 'fixed', height: '40px', 'zIndex': 1000, top: 0, width: '776px' }}>
           <TextField
-            key="input"
-            ref="input"
+            key="query"
+            ref="query"
             style={{ fontSize: '20px' }}
             hintText="Enter your command!"
             fullWidth={true}
-            value={this.state.input}
+            value={this.state.query}
             onKeyDown={this.handleKeyDown.bind(this)}
             onChange={this.handleChange.bind(this)}
             />
@@ -399,7 +393,3 @@ class AppContainer extends React.Component {
 }
 
 const appContainer = ReactDOM.render(<AppContainer />, document.getElementById('app'));
-
-window.clearQuery = () => {
-  appContainer.clearState();
-};

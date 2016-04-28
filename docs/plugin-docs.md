@@ -30,6 +30,8 @@ Current API Version: `hain-0.1.0`
   * [hain-plugin-google-play](https://github.com/Braunson/hain-plugin-google-play)
 - `hain-0.1.0`
   * [hain-plugin-naverdictionary](https://github.com/appetizermonster/hain-plugin-naverdictionary)
+  * [hain-plugin-best-torrent](https://github.com/kamahl19/hain-plugin-best-torrent)
+  * [hain-plugin-npm](https://github.com/kamahl19/hain-plugin-npm)
 
 ## Guides
 

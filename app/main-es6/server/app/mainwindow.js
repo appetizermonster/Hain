@@ -5,7 +5,8 @@ const shell = electron.shell;
 const BrowserWindow = electron.BrowserWindow;
 
 const platformUtil = require('../../../platform-util');
-const pref = require('../pref');
+const rpc = require('../rpc-server');
+const windowUtil = require('./windowutil');
 
 let browserWindow = null;
 
@@ -41,46 +42,17 @@ function createWindow(cb) {
   });
 }
 
-function _centerWindowOnSelectedScreen(window) {
-  const screen = electron.screen;
-
-  let selectedDisplay = screen.getPrimaryDisplay();
-  const displays = screen.getAllDisplays();
-  const cursorPos = screen.getCursorScreenPoint();
-
-  for (const display of displays) {
-    const bounds = display.bounds;
-    const [left, right, top, bottom] = [bounds.x, bounds.x + bounds.width, bounds.y, bounds.y + bounds.height];
-    if (cursorPos.x < left || cursorPos.x > right)
-      continue;
-    if (cursorPos.y < top || cursorPos.y > bottom)
-      continue;
-
-    selectedDisplay = display;
-    break;
-  }
-
-  const windowSize = window.getSize();
-  const displayBounds = selectedDisplay.bounds;
-
-  const centerPos = [displayBounds.x + displayBounds.width * 0.5, displayBounds.y + displayBounds.height * 0.5];
-  centerPos[0] -= windowSize[0] * 0.5; // x
-  centerPos[1] -= windowSize[1] * 0.5; // y
-
-  window.setPosition(Math.round(centerPos[0]), Math.round(centerPos[1]));
-}
-
 function showWindowOnCenter() {
   if (browserWindow === null)
     return;
 
   platformUtil.saveFocus();
-  _centerWindowOnSelectedScreen(browserWindow);
+  windowUtil.centerWindowOnSelectedScreen(browserWindow);
   browserWindow.show();
 }
 
-function clearQuery() {
-  browserWindow.webContents.executeJavaScript('clearQuery()');
+function setQuery(query) {
+  rpc.send('mainwindow', 'set-query', query);
 }
 
 function hideAndRefreshWindow(dontRestoreFocus) {
@@ -88,10 +60,6 @@ function hideAndRefreshWindow(dontRestoreFocus) {
     return;
 
   browserWindow.hide();
-
-  const doClearQuery = pref.get('clearQuery');
-  if (doClearQuery)
-    clearQuery();
 
   if (!dontRestoreFocus) {
     platformUtil.restoreFocus();
@@ -113,11 +81,16 @@ function isContentLoading() {
   return browserWindow.webContents.isLoading();
 }
 
+function isVisible() {
+  return browserWindow.isVisible();
+}
+
 module.exports = {
   createWindow,
   showWindowOnCenter,
-  clearQuery,
+  setQuery,
   hideAndRefreshWindow,
   toggleWindow,
-  isContentLoading
+  isContentLoading,
+  isVisible
 };
