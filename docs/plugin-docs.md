@@ -29,6 +29,7 @@ Current API Version: `hain-0.3.0`
   * [hain-plugin-producthunt](https://github.com/Braunson/hain-plugin-producthunt)
   * [hain-plugin-google-play](https://github.com/Braunson/hain-plugin-google-play)
   * [hain-plugin-clipboard](https://github.com/notatestuser/hain-plugin-clipboard)
+  * [hain-plugin-material-colors](https://github.com/aouerfelli/hain-plugin-material-colors)
 - `hain-0.1.0`
   * [hain-plugin-naverdictionary](https://github.com/appetizermonster/hain-plugin-naverdictionary)
   * [hain-plugin-best-torrent](https://github.com/kamahl19/hain-plugin-best-torrent)
