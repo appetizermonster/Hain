@@ -1,6 +1,7 @@
 'use strict';
 
 const lo_set = require('lodash.set');
+const lo_trimStart = require('lodash.trimstart');
 
 import React from 'react';
 import { CardTitle, CardText } from 'material-ui';
@@ -38,7 +39,7 @@ class SchemaForm extends React.Component {
 
   handleChange(path, val) {
     const model = this.state.model;
-    lo_set(model, path, val);
+    lo_set(model, lo_trimStart(path, '.'), val);
     this.setState({ model });
     this.props.onChange(model);
   }

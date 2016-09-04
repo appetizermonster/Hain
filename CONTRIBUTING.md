@@ -20,7 +20,6 @@ $ git pull upstream develop
 $ git checkout develop
 $ git branch <your-feature-branch>
 $ git checkout <your-feature-branch>
-$ npm install -g --arch=ia32 electron-prebuilt
 $ npm install
 $ ...make your changes...
 $ git push origin
