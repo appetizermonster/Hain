@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('original-fs');
+const glob = require('glob');
 const co = require('co');
 const lo_reject = require('lodash.reject');
 const lo_findIndex = require('lodash.findindex');
@@ -138,7 +139,58 @@ module.exports = (context) => {
     });
   }
 
+  function _pathsToSearchResult(paths) {
+    return paths.map(x => {
+      let result = {
+        id: x,
+        title: path.win32.basename(x),
+        desc: x,
+        group: 'Files & Folders (Disk)',
+        score: 1
+      };
+      
+      if (fs.lstatSync(x).isDirectory()) {
+        result.icon = '#fa fa-folder';
+        result.redirect = x;
+      } else {
+        result.icon = '#fa fa-file-o';
+      }
+      return result;
+    });
+  }
+
+  function globSearch(query, res) {
+    if (query.search(/[A-z]:[\\\/]/) === 0) {
+      // replace back slashes with forward slashes
+      let globSearch = query.split('\\').join('/');
+      // remove wildcards to stop accidental entire disk scans
+      globSearch = globSearch.split('*').join('') + "*"; 
+      const options = {
+        dot: true, 
+        nocase: true,
+        mark: true,
+        root: globSearch.substr(0,1) + ":\\"
+      };
+
+      // remove drive prefix
+      globSearch = globSearch.substr(2);
+
+      var find = glob.sync(globSearch, options);
+    
+      if (find && find.length) {
+        if (query.length === 3) {
+          res.add(_pathsToSearchResult([query]));
+        }
+        res.add(_pathsToSearchResult(find.slice(0, 50)));
+        return true;
+      }
+    }
+  }
+    
   function search(query, res) {
+    if (globSearch(query, res))
+      return;
+
     const query_trim = query.replace(' ', '');
     const recentFuzzyResults = util.fuzzy(_recentUsedItems, query_trim).slice(0, 2);
     const defaultFuzzyResults = util.fuzzy(db, query_trim);
@@ -155,7 +207,6 @@ module.exports = (context) => {
       });
       recentSearchResults = _fuzzyResultToSearchResult(scoredRecentFuzzyResults);
     }
-
     // Reject if it is duplicated with recent items
     const sanitizedFuzzyResults = lo_reject(defaultFuzzyResults, x => lo_findIndex(recentFuzzyResults, { path: x.path }) >= 0);
     const fileSearchResults = _fuzzyResultToSearchResult(sanitizedFuzzyResults);
