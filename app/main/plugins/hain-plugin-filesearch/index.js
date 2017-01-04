@@ -17,7 +17,7 @@ const matchFunc = (filePath, stats) => {
   const ext = path.extname(filePath).toLowerCase();
   if (stats.isDirectory())
     return true;
-  return (ext === '.exe' || ext === '.lnk' || ext === '.appref-ms');
+  return (ext === '.exe' || ext === '.lnk' || ext === '.appref-ms' || ext === '.bat');
 };
 
 function injectEnvVariable(dirPath) {
