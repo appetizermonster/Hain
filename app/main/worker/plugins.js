@@ -246,15 +246,20 @@ module.exports = (workerContext) => {
 
       let _query = query;
       const _query_lower = query.toLowerCase();
-      const _prefix = pluginConfig.prefix;
+      let _prefix = pluginConfig.prefix;
 
       if (_prefix /* != null || != undefined */) {
-        const prefix_lower = _prefix.toLowerCase();
+        let prefix_lower = _prefix.toLowerCase();
         if (_query_lower.startsWith(prefix_lower) === false) {
-          const prefixHelp = _makePrefixHelp(pluginConfig, query);
-          if (prefixHelp && prefixHelp.length > 0)
-            sysResults = sysResults.concat(prefixHelp);
-          continue;
+          // try without leading slash
+          _prefix = _prefix.replace("/", "");
+          prefix_lower = _prefix.toLowerCase();
+          if (_query_lower.startsWith(prefix_lower) === false) {
+            const prefixHelp = _makePrefixHelp(pluginConfig, query);
+            if (prefixHelp && prefixHelp.length > 0)
+              sysResults = sysResults.concat(prefixHelp);
+            continue;
+          }
         }
         _query = _query.substring(_prefix.length);
       }
