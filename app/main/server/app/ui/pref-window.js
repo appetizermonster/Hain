@@ -2,6 +2,7 @@
 
 const electron = require('electron');
 const shell = electron.shell;
+const dialog = electron.dialog;
 const BrowserWindow = electron.BrowserWindow;
 const windowUtil = require('./window-util');
 const RpcChannel = require('../../../shared/rpc-channel');
@@ -47,9 +48,14 @@ module.exports = class PrefWindow {
       show: false
     });
     this.browserWindow.loadURL(url);
-    this.browserWindow.on('close', () => {
-      this.prefManager.commitPreferences();
-      this.browserWindow = null;
+    this.browserWindow.on('close', (evt) => {
+      if (!this.prefManager.verifyPreferences()) {
+        dialog.showErrorBox('Hain', 'Invalid shortcut.');
+        evt.preventDefault();
+      } else {
+        this.prefManager.commitPreferences();
+        this.browserWindow = null;
+      }
     });
 
     this.browserWindow.webContents.on('will-navigate', (evt, _url) => {

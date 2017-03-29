@@ -23,6 +23,7 @@ class PreferencesObject extends EventEmitter {
 
     this.model = {};
     this._isDirty = false;
+    this._isValidShortcut = true;
     this.encoderOptions = {
       encryptionKey: makeEncryptionKey(id)
     };
@@ -31,6 +32,9 @@ class PreferencesObject extends EventEmitter {
   }
   get isDirty() {
     return this._isDirty;
+  }
+  get isValidShortcut() {
+    return this._isValidShortcut;
   }
   load() {
     const defaults = schemaDefaults(this.schema);
@@ -53,10 +57,23 @@ class PreferencesObject extends EventEmitter {
     return defaults;
   }
   update(model) {
-    if (lo_isEqual(this.model, model))
+    if (lo_isEqual(this.model, model) || !this.verify(model))
       return;
     this.model = model;
     this._isDirty = true;
+  }
+  verify(model) {
+    this._isValidShortcut = true;
+    if (model && model.customQueryShortcuts && model.customQueryShortcuts.length > 0) {
+      model.customQueryShortcuts.forEach((entry) => {
+        Object.keys(entry).forEach((key) => {
+          if (entry[key] === '') {
+            this._isValidShortcut = false;
+          }
+        });
+      });
+    }
+    return this._isValidShortcut;
   }
   toPrefFormat() {
     return {

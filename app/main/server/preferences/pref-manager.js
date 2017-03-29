@@ -42,6 +42,9 @@ module.exports = class PrefManager {
     }
     this.workerProxy.resetPreferences(prefId);
   }
+  verifyPreferences() {
+    return this.appPref.isValidShortcut;
+  }
   commitPreferences() {
     this.workerProxy.commitPreferences();
 
