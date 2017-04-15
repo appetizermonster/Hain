@@ -1,7 +1,6 @@
 'use strict';
 
 const lo_get = require('lodash.get');
-const lo_isEqual = require('lodash.isequal');
 const lo_assign = require('lodash.assign');
 
 const EventEmitter = require('events');
@@ -57,21 +56,25 @@ class PreferencesObject extends EventEmitter {
     return defaults;
   }
   update(model) {
-    if (lo_isEqual(this.model, model) || !this.verify(model))
+    if (!this.verify(model))
       return;
     this.model = model;
     this._isDirty = true;
   }
   verify(model) {
     this._isValidShortcut = true;
-    if (model && model.customQueryShortcuts && model.customQueryShortcuts.length > 0) {
-      model.customQueryShortcuts.forEach((entry) => {
-        Object.keys(entry).forEach((key) => {
-          if (entry[key] === '') {
-            this._isValidShortcut = false;
-          }
+    if (model && model.customQueryShortcuts) {
+      if (model.customQueryShortcuts.length > 0) {
+        model.customQueryShortcuts.forEach((entry) => {
+          Object.keys(entry).forEach((key) => {
+            if (entry[key] === '') {
+              this._isValidShortcut = false;
+            }
+          });
         });
-      });
+      } else if (model.customQueryShortcuts.length === 0) {
+        this._isValidShortcut = true;
+      }
     }
     return this._isValidShortcut;
   }
