@@ -8,7 +8,7 @@
   "hain": {
     "usage": "Enter '/hain' to see available commands",
     "prefix": "/hain",
-    "icon": "#fa fa-gear",
+    "icon": "#fas fa-cog",
     "group": "Hain Commands"
   }
 }
