@@ -104,7 +104,7 @@ module.exports = (context) => {
 
   function execute(id, payload, extra) {
     if (fs.existsSync(id) === false) {
-      toast.enqueue('Sorry, Could\'nt Find a File');
+      toast.enqueue('Sorry, Couldn\'t Find a File');
       return;
     }
 
