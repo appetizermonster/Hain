@@ -108,7 +108,7 @@ module.exports = () => {
         pluginConfigs[pluginId] = pluginConfig;
         logger.debug(`${pluginId} loaded`);
       } catch (e) {
-        logger.error(`${pluginId} could'nt be created: ${e.stack || e}`);
+        logger.error(`${pluginId} couldn't be created: ${e.stack || e}`);
       }
     }
     return { plugins, pluginConfigs };
