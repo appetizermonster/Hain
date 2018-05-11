@@ -14,7 +14,7 @@ so, I made it.
 
 ## Vision
 
-It's a launcher with strict syntax (like terminal programs), it's not targeting to interpret natrual language.  
+It's a launcher with strict syntax (like terminal programs), it's not targeting to interpret natural language.  
 I believe the strict syntax can provide more powerful and fast response than to interpret natural language.
 
 ## Features
@@ -27,7 +27,7 @@ I believe the strict syntax can provide more powerful and fast response than to 
 Go to [Releases](https://github.com/hainproject/hain/releases), then you can download prebuilt binaries.
 
 ## Usage
-Run and press `alt+space` anywhere
+Run and press `alt+space` anywhere.
 
 ## How to make Plugins
 
@@ -69,7 +69,7 @@ gulp build-darwin
 ```
 
 ## Contributing
-See [CONTRIBUTING.md](CONTRIBUTING.md)  
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Credits
 The name "Hain" is named by Hyunseop Lee, it means "a Servant" in Korean.  
