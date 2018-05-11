@@ -14,7 +14,13 @@ module.exports = (context) => {
   const indexer = context.indexer;
   const toast = context.toast;
 
-  const recursiveSearchDirs = sharedUtil.injectEnvVariables(initialPref.recursiveFolders || []);
+  let recursiveSearchDirs = [];
+  try {
+    recursiveSearchDirs = sharedUtil.injectEnvVariables(initialPref.recursiveFolders || []);
+  } catch (err) {
+    logger.log(err.message);
+  }
+
   const lazyIndexingKeys = {};
 
   function* findFilesAndUpdateIndexer(dirs, recursive) {
@@ -63,12 +69,19 @@ module.exports = (context) => {
   function* setupWatchers(dirs, recursive) {
     for (const dir of dirs) {
       const _dir = dir;
-      fs.watch(_dir, {
-        persistent: true,
-        recursive: recursive
-      }, (evt, filename) => {
-        lazyRefreshIndex(_dir, recursive);
-      });
+
+      try {
+        fs.watch(_dir, {
+          persistent: true,
+          recursive: recursive
+        }, (evt, filename) => {
+          lazyRefreshIndex(_dir, recursive);
+        });
+
+      } catch (err) {
+        logger.log(err);
+        logger.log(err.stack);
+      }
     }
   }
 

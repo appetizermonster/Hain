@@ -14,10 +14,21 @@ function injectEnvVariable(dirPath) {
   }
 
   // Inject Environment Variables
-  for (const envVar in process.env) {
-    const value = process.env[envVar];
-    _path = _path.replace(`\${${envVar}}`, value);
+  let tokens = dirPath.match(/\${.*?}/g);
+
+  if (tokens) {
+    for (const i in tokens) {
+      const tokenId = tokens[i].slice(2, -1);
+      const value = process.env[tokenId];
+
+      if (value === undefined) {
+        throw new Error(`can't translate provided token ${tokens[i]} into a valid environment variable`);
+      }
+
+      _path = _path.replace(tokens[i], value);
+    }
   }
+
   return _path;
 }
 
