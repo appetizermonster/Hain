@@ -30,7 +30,7 @@
     "electron-packager": "^8.6.0",
     "electron-rebuild": "^1.5.7",
     "electron-winstaller": "^2.5.2",
-    "eslint": "^3.2.2",
+    "eslint": "^3.19.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-config-recommended": "^1.4.0",
     "eslint-plugin-import": "^1.14.0",
@@ -50,5 +50,7 @@
   "optionalDependencies": {
     "electron-installer-debian": "^0.3.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "g": "^2.0.1"
+  }
 }

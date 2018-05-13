@@ -29,7 +29,7 @@ module.exports = class PrefManager {
   getPreferences(prefId) {
     if (prefId === APP_PREF_ID) {
       return this.appPref.toPrefFormat();
-    } 
+    }
 
     return this.workerProxy.getPreferences(prefId);
   }

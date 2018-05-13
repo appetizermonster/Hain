@@ -56,7 +56,6 @@ module.exports = class PrefWindow {
       if (!this.prefManager.verifyPreferences()) {
         dialog.showErrorBox('Hain', 'Invalid shortcut.');
         evt.preventDefault();
-
       } else {
         this.prefManager.commitPreferences();
         this.browserWindow = null;

@@ -34,7 +34,8 @@ class Indexer {
     for (const key in this.items) {
       const item = this.items[key];
       const searchResult = this._searchItem(item, query);
-      if (Array.isArray(searchResult)) this._cachedResults.push(...searchResult);
+      if (Array.isArray(searchResult))
+        this._cachedResults.push(...searchResult);
       else if (lo_isPlainObject(searchResult))
         this._cachedResults.push(searchResult);
     }
