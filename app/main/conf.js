@@ -2,12 +2,13 @@
 
 const pkg = require('../package.json');
 const path = require('path');
+
 const applicationConfigPath = require('application-config-path');
 
 const HAIN_USER_PATH = applicationConfigPath('hain-user');
-const LOCAL_STORAGE_DIR = `${HAIN_USER_PATH}/localStorages`;
-const PLUGIN_PREF_DIR = `${HAIN_USER_PATH}/prefs/plugins`;
-const APP_PREF_DIR = `${HAIN_USER_PATH}/prefs/app`;
+const LOCAL_STORAGE_DIR = path.join(HAIN_USER_PATH, 'localStorages');
+const PLUGIN_PREF_DIR = path.join(HAIN_USER_PATH, 'prefs', 'plugins');
+const APP_PREF_DIR = path.join(HAIN_USER_PATH, 'prefs', 'app');
 
 const __PLUGIN_PREINSTALL_DIR = path.resolve('./pre_install');
 const __PLUGIN_UNINSTALL_LIST_FILE = path.resolve('./pre_uninstall');
