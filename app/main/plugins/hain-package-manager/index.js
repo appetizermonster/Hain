@@ -41,7 +41,7 @@ module.exports = (context) => {
   const matchUtil = context.matchUtil;
   const app = context.app;
 
-  let isSearching = false;
+  let fetchingStatus = 'none';
   let currentStatus = null;
   let progressTimer = 0;
   let lastUpdatedTime = 0;
@@ -53,9 +53,15 @@ module.exports = (context) => {
 
   function checkAvailablePackages() {
     const elapsed = (Date.now() - lastUpdatedTime) / 1000;
-    if (elapsed <= CACHE_DURATION_SEC || isSearching) return;
+    if (
+      elapsed <= CACHE_DURATION_SEC ||
+      fetchingStatus === 'fetching' ||
+      fetchingStatus === 'error'
+    ) {
+      return;
+    }
 
-    isSearching = true;
+    fetchingStatus = 'fetching';
     searchClient
       .findCompatiblePackagesWithDownloads(
         getBackendUrl(),
@@ -68,10 +74,11 @@ module.exports = (context) => {
             'desc'
           ]);
           lastUpdatedTime = Date.now();
-          isSearching = false;
+          fetchingStatus = 'done';
         },
         (err) => {
-          isSearching = false;
+          fetchingStatus = 'error';
+          logger.log(err);
         }
       );
   }
@@ -153,11 +160,19 @@ module.exports = (context) => {
     const arg = parsed[2] || '';
     if (command === 'install') {
       if (availablePackages.length <= 0) {
-        return {
-          title: 'Please wait, fetching available packages...',
-          desc: NAME,
-          icon: '#fa fa-spinner fa-spin'
-        };
+        if (fetchingStatus === 'fetching') {
+          return {
+            title: 'Please wait, fetching available packages...',
+            desc: NAME,
+            icon: '#fa fa-spinner fa-spin'
+          };
+        } else if (fetchingStatus === 'error') {
+          return {
+            title: 'Error occured',
+            desc: NAME,
+            icon: '#fa fa-exclamation-triangle'
+          };
+        }
       }
       const packages = availablePackages.filter((x) => {
         return !pm.hasPackage(x.name);

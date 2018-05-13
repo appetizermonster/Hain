@@ -10,6 +10,32 @@ const RpcChannel = require('../../../shared/rpc-channel');
 
 const ipc = electron.ipcMain;
 
+function createWindowOptions() {
+  let options = {
+    width: 800,
+    height: 530,
+    alwaysOnTop: true,
+    center: true,
+    frame: false,
+    show: false,
+    closable: false,
+    minimizable: false,
+    maximizable: false,
+    moveable: false,
+    resizable: false,
+    skipTaskbar: true
+  };
+  const isDarwin = process.platform === 'darwin';
+  if (isDarwin) {
+    options = {
+      ...options,
+      titleBarStyle: 'hidden',
+      vibrancy: 'popover'
+    };
+  }
+  return options;
+}
+
 module.exports = class MainWindow {
   constructor(workerProxy, appPref) {
     this.workerProxy = workerProxy;
@@ -24,21 +50,7 @@ module.exports = class MainWindow {
   }
 
   createWindow(onComplete) {
-    const browserWindow = new BrowserWindow({
-      width: 800,
-      height: 530,
-      alwaysOnTop: true,
-      center: true,
-      frame: false,
-      show: false,
-      closable: false,
-      minimizable: false,
-      maximizable: false,
-      moveable: false,
-      resizable: false,
-      skipTaskbar: true
-    });
-
+    const browserWindow = new BrowserWindow(createWindowOptions());
     if (onComplete) browserWindow.webContents.on('did-finish-load', onComplete);
 
     browserWindow.webContents.on('new-window', (evt, url) => {

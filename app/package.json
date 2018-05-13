@@ -1,6 +1,6 @@
 {
   "name": "hain",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "_apiVersion": {
     "currentVersion": "0.6.0",
     "compatibleVersions": [
@@ -31,7 +31,7 @@
     "fs-promise": "1.0.0",
     "got": "^6.2.0",
     "html-escape": "^1.0.2",
-    "jquery": "^2.2.1",
+    "jquery": "^3.3.1",
     "jsonschema": "^1.1.0",
     "lodash.assign": "^4.0.7",
     "lodash.clamp": "^4.0.2",

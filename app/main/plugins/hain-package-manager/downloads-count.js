@@ -13,14 +13,14 @@ const PERIOD_LAST_MONTH = 'last-month';
 function _getDownloadCountForPoint(packages, period) {
   const query = packages.join(',');
   const query_enc = encodeURIComponent(query);
-  const baseUrl = `http://api.npmjs.org/downloads/point/${period}/${query_enc},`;
+  const baseUrl = `https://api.npmjs.org/downloads/point/${period}/${query_enc},`;
   return got(baseUrl, { json: true }).then((res) => res.body);
 }
 
 function _getDownloadCountForRange(packages, range) {
   const query = packages.join(',');
   const query_enc = encodeURIComponent(query);
-  const baseUrl = `http://api.npmjs.org/downloads/range/${range}/${query_enc},`;
+  const baseUrl = `https://api.npmjs.org/downloads/range/${range}/${query_enc},`;
   return got(baseUrl, { json: true }).then((res) => {
     const { body } = res;
     const result = {};
