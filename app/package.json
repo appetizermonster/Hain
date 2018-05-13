@@ -15,6 +15,10 @@
   "main": "main/bootstrap.js",
   "author": "Heejin Lee <monster@teamappetizer.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hainproject/hain.git"
+  },
   "jest": {
     "automock": false,
     "testEnvironment": "node"
