@@ -16,8 +16,20 @@ module.exports = (context) => {
   const indexer = context.indexer;
   const toast = context.toast;
 
-  const recursiveSearchDirs = sharedUtil.injectEnvVariables(initialPref.recursiveFolders || []);
-  const flatSearchDirs = sharedUtil.injectEnvVariables(initialPref.flatFolders || []);
+  let recursiveSearchDirs = [];
+  try {
+    recursiveSearchDirs = sharedUtil.injectEnvVariables(initialPref.recursiveFolders || []);
+  } catch (err) {
+    logger.log(err.message);
+  }
+
+  let flatSearchDirs = [];
+  try {
+    flatSearchDirs = sharedUtil.injectEnvVariables(initialPref.flatFolders || []);
+  } catch (err) {
+    logger.log(err.message);
+  }
+
   const searchExtensions = initialPref.searchExtensions || [];
 
   const lazyIndexingKeys = {};
@@ -62,12 +74,19 @@ module.exports = (context) => {
   function* setupWatchers(dirs, recursive) {
     for (const dir of dirs) {
       const _dir = dir;
-      fs.watch(_dir, {
-        persistent: true,
-        recursive: recursive
-      }, (evt, filename) => {
-        lazyRefreshIndex(_dir, recursive);
-      });
+
+      try {
+        fs.watch(_dir, {
+          persistent: true,
+          recursive: recursive
+        }, (evt, filename) => {
+          lazyRefreshIndex(_dir, recursive);
+        });
+
+      } catch (err) {
+        logger.log(err);
+        logger.log(err.stack);
+      }
     }
   }
 
@@ -85,7 +104,7 @@ module.exports = (context) => {
 
   function execute(id, payload, extra) {
     if (fs.existsSync(id) === false) {
-      toast.enqueue('Sorry, Could\'nt Find a File');
+      toast.enqueue('Sorry, Couldn\'t Find a File');
       return;
     }
 
