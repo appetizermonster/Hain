@@ -1,7 +1,6 @@
 'use strict';
 
 const lo_assign = require('lodash.assign');
-const lo_isArray = require('lodash.isarray');
 const lo_isPlainObject = require('lodash.isplainobject');
 
 const iconFmt = require('./icon-fmt');
@@ -34,7 +33,7 @@ function createResponseObject(resFunc, pluginId, pluginConfig) {
   return {
     add: (result) => {
       let searchResults = [];
-      if (lo_isArray(result)) {
+      if (Array.isArray(result)) {
         searchResults = result.map(sanitizeSearchResult);
       } else if (lo_isPlainObject(result)) {
         searchResults = [sanitizeSearchResult(result)];

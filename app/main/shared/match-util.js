@@ -1,6 +1,5 @@
 'use strict';
 
-const lo_isArray = require('lodash.isarray');
 const lo_isObject = require('lodash.isobject');
 const lo_orderBy = require('lodash.orderby');
 
@@ -114,7 +113,7 @@ function search(elems, testStr, keywordGetter, matchFunc) {
     return results;
 
   const testStr_norm = testStr.toLowerCase();
-  if (lo_isArray(elems)) {
+  if (Array.isArray(elems)) {
     // array
     for (let i = 0; i < elems.length; ++i) {
       const matchResult = matchFunc(elems[i], testStr_norm, _keywordGetter);

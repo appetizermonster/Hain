@@ -1,7 +1,6 @@
 'use strict';
 
 const lo_assign = require('lodash.assign');
-const lo_isArray = require('lodash.isarray');
 const lo_isFunction = require('lodash.isfunction');
 const lo_isPlainObject = require('lodash.isplainobject');
 
@@ -19,7 +18,7 @@ class Indexer {
     this._cachedResults = [];
   }
   set(key, funcOrArray) {
-    if (!lo_isArray(funcOrArray) && !lo_isFunction(funcOrArray)) return;
+    if (!Array.isArray(funcOrArray) && !lo_isFunction(funcOrArray)) return;
 
     this.items[key] = funcOrArray;
   }
@@ -35,7 +34,7 @@ class Indexer {
     for (const key in this.items) {
       const item = this.items[key];
       const searchResult = this._searchItem(item, query);
-      if (lo_isArray(searchResult)) this._cachedResults.push(...searchResult);
+      if (Array.isArray(searchResult)) this._cachedResults.push(...searchResult);
       else if (lo_isPlainObject(searchResult))
         this._cachedResults.push(searchResult);
     }
@@ -48,7 +47,7 @@ class Indexer {
   }
   _searchItem(item, query) {
     try {
-      if (lo_isArray(item)) return this._searchArrayItem(item, query);
+      if (Array.isArray(item)) return this._searchArrayItem(item, query);
       else if (lo_isFunction(item))
         return this._searchFunctionItem(item, query);
     } catch (e) {
@@ -89,7 +88,7 @@ class Indexer {
   _searchFunctionItem(item, query) {
     const matched = [];
     const result = item(query);
-    if (lo_isArray(result)) matched.push(...result);
+    if (Array.isArray(result)) matched.push(...result);
     else if (lo_isPlainObject(result)) matched.push(result);
     return matched;
   }
