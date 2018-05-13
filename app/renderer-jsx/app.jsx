@@ -527,13 +527,13 @@ class AppContainer extends React.Component {
                 marginTop: '7px',
                 marginBottom: '-8px',
                 color: '#a7a7a7',
-                fontSize: '0.7em'
+                fontSize: '12px'
               }}
             >
               <table style={{ width: '100%' }}>
                 <tr>
-                  <td width="50%">Hain</td>
-                  <td width="50%" style={{ textAlign: 'right' }}>
+                  <td style={{ fontWeight: 700, fontSize: '14px' }}>Hain</td>
+                  <td style={{ textAlign: 'right' }}>
                     <kbd>↓</kbd> <kbd>↑</kbd> to navigate, <kbd>tab</kbd> to
                     expand(redirect), <kbd>enter</kbd> to execute
                   </td>
@@ -541,14 +541,16 @@ class AppContainer extends React.Component {
               </table>
             </div>
 
-            <TextField
-              key="query"
-              ref="query"
-              fullWidth={true}
-              value={this.state.query}
-              onKeyDown={this.handleKeyDown.bind(this)}
-              onChange={this.handleChange.bind(this)}
-            />
+            <div style={{ margin: '6px 2px 0 2px' }}>
+              <TextField
+                key="query"
+                ref="query"
+                fullWidth={true}
+                value={this.state.query}
+                onKeyDown={this.handleKeyDown.bind(this)}
+                onChange={this.handleChange.bind(this)}
+              />
+            </div>
           </div>
 
           <div key="containerWrapper">
