@@ -50,7 +50,5 @@
   "optionalDependencies": {
     "electron-installer-debian": "^0.3.0"
   },
-  "dependencies": {
-    "g": "^2.0.1"
-  }
+  "dependencies": {}
 }

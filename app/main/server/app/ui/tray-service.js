@@ -37,6 +37,13 @@ module.exports = class TrayService {
         click: () => this.appService.open()
       },
       {
+        type: 'separator'
+      },
+      {
+        label: 'Preferences',
+        click: () => this.appService.openPreferences()
+      },
+      {
         label: 'Auto-launch',
         type: 'checkbox',
         checked: this.autoLaunchActivated,
@@ -44,10 +51,6 @@ module.exports = class TrayService {
       },
       {
         type: 'separator'
-      },
-      {
-        label: 'Preferences',
-        click: () => this.appService.openPreferences()
       },
       {
         label: 'Restart',
