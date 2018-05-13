@@ -10,7 +10,7 @@ const RpcChannel = require('../../../shared/rpc-channel');
 
 const ipc = electron.ipcMain;
 
-function createWindowOptions() {
+function createWindowOptions(appPref) {
   let options = {
     width: 800,
     height: 530,
@@ -23,8 +23,10 @@ function createWindowOptions() {
     maximizable: false,
     moveable: false,
     resizable: false,
-    skipTaskbar: true
+    skipTaskbar: true,
+    transparent: appPref.get('enableTransparency') || false
   };
+
   const isDarwin = process.platform === 'darwin';
   if (isDarwin) {
     options = {
@@ -33,24 +35,27 @@ function createWindowOptions() {
       vibrancy: 'popover'
     };
   }
+
   return options;
 }
 
 module.exports = class MainWindow {
-  constructor(workerProxy, appPref) {
+  constructor(workerProxy, prefManager) {
     this.workerProxy = workerProxy;
-    this.appPref = appPref;
+    this.appPref = prefManager.appPref;
     this.browserWindow = null;
     this.rpc = RpcChannel.create(
       '#mainWindow',
       this._send.bind(this),
       this._on.bind(this)
     );
+
     this._setupHandlers();
   }
 
   createWindow(onComplete) {
-    const browserWindow = new BrowserWindow(createWindowOptions());
+    const browserWindow = new BrowserWindow(createWindowOptions(this.appPref));
+
     if (onComplete) browserWindow.webContents.on('did-finish-load', onComplete);
 
     browserWindow.webContents.on('new-window', (evt, url) => {
@@ -60,6 +65,7 @@ module.exports = class MainWindow {
     browserWindow.loadURL(`file://${__dirname}/../../../../dist/index.html`);
     browserWindow.on('blur', () => {
       if (browserWindow.webContents.isDevToolsOpened()) return;
+
       this.hide(true);
     });
 
@@ -99,22 +105,27 @@ module.exports = class MainWindow {
 
     platformUtil.saveFocus();
 
+    // center the window in the middle of the screen?
     if (!this.browserWindow.isVisible())
       windowUtil.centerWindowOnSelectedScreen(
         this.browserWindow,
         this.appPref.get('openOnActiveDisplay')
       );
 
+    // show the main Hain app window
     this.browserWindow.show();
+
+    // if a query has been specified, set it into the input field
     if (query) this.setQuery(query);
   }
 
-  hide(dontRestoreFocus) {
+  hide(doNotRestoreFocus) {
     if (this.browserWindow === null) return;
+
     this.browserWindow.setPosition(0, -10000);
     this.browserWindow.hide();
 
-    if (!dontRestoreFocus) platformUtil.restoreFocus();
+    if (!doNotRestoreFocus) platformUtil.restoreFocus();
   }
 
   toggle(query) {

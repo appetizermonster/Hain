@@ -10,7 +10,7 @@ module.exports = class ShortcutService {
     this.appPref = appPref;
   }
 
-  initializeShortcuts() {
+  initialize() {
     this.updateShortcuts();
 
     this.appPref.on('update', this.updateShortcuts.bind(this));

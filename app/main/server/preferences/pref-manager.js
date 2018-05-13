@@ -4,10 +4,12 @@ const appPref = require('./app-pref');
 
 const APP_PREF_ID = 'Hain';
 
-const appPrefItem = {
-  id: APP_PREF_ID,
-  group: 'Application'
-};
+const appStaticPrefs = [
+  {
+    id: APP_PREF_ID,
+    group: 'Application'
+  }
+];
 
 module.exports = class PrefManager {
   constructor(workerProxy) {
@@ -21,7 +23,7 @@ module.exports = class PrefManager {
         group: 'Plugins'
       }));
 
-      const prefItems = [appPrefItem].concat(pluginPrefItems);
+      const prefItems = appStaticPrefs.concat(pluginPrefItems);
 
       return prefItems;
     });

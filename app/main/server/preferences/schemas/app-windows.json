@@ -1,15 +1,6 @@
 {
   "type": "object",
   "properties": {
-    "shortcut": {
-      "type": "string",
-      "title": "Open-Close Toggle Shorcut",
-      "description":
-        "Please see available keys on <a href='http://electron.atom.io/docs/v0.37.7/api/accelerator/'>Here</a>",
-      "default": "alt+space",
-      "minLength": 1,
-      "errorMessages": "You must provide basic shortcut (e.g. 'alt+space')"
-    },
     "clearQuery": {
       "type": "boolean",
       "title": "Clear query after window has closed",
@@ -20,10 +11,20 @@
       "title": "Open window on the currently active display",
       "default": true
     },
+
+    "shortcut": {
+      "type": "string",
+      "title": "Open-Close Toggle Shortcut",
+      "description": "<a href='http://electron.atom.io/docs/v0.37.7/api/accelerator/'>Available shortcut key definitions</a>.",
+      "default": "alt+space",
+      "minLength": 1,
+      "errorMessages": "You must provide a shortcut (e.g. 'alt+space')"
+    },
+
     "customQueryShortcuts": {
       "type": "array",
       "title": "Custom Query Shortcuts",
-      "description": "You can set your own shortcuts with custom query",
+      "description": "You can set your own shortcuts with a custom query",
       "items": {
         "type": "object",
         "properties": {
@@ -37,20 +38,23 @@
             "type": "string",
             "title": "Custom Query",
             "minLength": 1,
-            "errorMessages": "You must provide any query (e.g. '/g ')"
+            "errorMessages": "You must provide a query (e.g. '/g ')"
           }
         }
       }
     },
+
     "proxy": {
       "type": "object",
       "title": "Global Proxy Settings",
       "properties": {
         "host": {
-          "type": "string"
+          "type": "string",
+          "title": "Host"
         },
         "port": {
           "type": "integer",
+          "title": "Port",
           "default": 80
         },
         "useProxy": {
