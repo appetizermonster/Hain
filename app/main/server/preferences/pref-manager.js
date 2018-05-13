@@ -1,7 +1,9 @@
 'use strict';
 
 const appPref = require('./app-pref');
+
 const APP_PREF_ID = 'Hain';
+
 const appPrefItem = {
   id: APP_PREF_ID,
   group: 'Application'
@@ -18,12 +20,17 @@ module.exports = class PrefManager {
         id,
         group: 'Plugins'
       }));
+
       const prefItems = [appPrefItem].concat(pluginPrefItems);
+
       return prefItems;
     });
   }
   getPreferences(prefId) {
-    if (prefId === APP_PREF_ID) return this.appPref.toPrefFormat();
+    if (prefId === APP_PREF_ID) {
+      return this.appPref.toPrefFormat();
+    } 
+
     return this.workerProxy.getPreferences(prefId);
   }
   updatePreferences(prefId, model) {
@@ -31,6 +38,7 @@ module.exports = class PrefManager {
       this.appPref.update(model);
       return;
     }
+
     this.workerProxy.updatePreferences(prefId, model);
   }
   resetPreferences(prefId) {
@@ -38,6 +46,7 @@ module.exports = class PrefManager {
       this.appPref.reset();
       return;
     }
+
     this.workerProxy.resetPreferences(prefId);
   }
   verifyPreferences() {

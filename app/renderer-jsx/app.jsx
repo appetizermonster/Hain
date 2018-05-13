@@ -111,12 +111,14 @@ class AppContainer extends React.Component {
     });
     rpc.define('requestAddResults', (__payload) => {
       const { ticket, type, payload } = __payload;
+
       console.log(
         'app.jsx -> rpc(requestAddResults), ticket=%s, type=%s, payload=%o',
         ticket,
         type,
         payload
       );
+
       if (searchTicket.current !== ticket) return;
 
       let results = this.state.results;
@@ -212,6 +214,7 @@ class AppContainer extends React.Component {
 
   execute(item, evt) {
     if (item === undefined) return;
+
     const e = evt.nativeEvent;
     const params = {
       context: item.context,
@@ -245,6 +248,7 @@ class AppContainer extends React.Component {
     const previewHash = `${context}.${id}`;
 
     if (previewHash === this._renderedPreviewHash) return;
+
     this._renderedPreviewHash = previewHash;
 
     const ticket = previewTicket.newTicket();
@@ -294,6 +298,7 @@ class AppContainer extends React.Component {
     const results = this.state.results;
     const selectionIndex = this.state.selectionIndex;
     const item = results[selectionIndex];
+
     if (item && item.redirect) this.setQuery(item.redirect);
   }
 
@@ -393,6 +398,7 @@ class AppContainer extends React.Component {
 
   parseIconUrl(iconUrl) {
     if (!lo_isString(iconUrl)) return null;
+
     if (iconUrl.startsWith('#')) {
       const iconClass = iconUrl.substring(1);
       return <Avatar key="icon" icon={<FontIcon className={iconClass} />} />;
@@ -534,6 +540,7 @@ class AppContainer extends React.Component {
                 </tr>
               </table>
             </div>
+
             <TextField
               key="query"
               ref="query"
@@ -543,6 +550,7 @@ class AppContainer extends React.Component {
               onChange={this.handleChange.bind(this)}
             />
           </div>
+
           <div key="containerWrapper">
             <div key="container" ref="listContainer" style={containerStyles}>
               <SelectableList
@@ -558,6 +566,7 @@ class AppContainer extends React.Component {
             </div>
             {previewBox}
           </div>
+
           <Notification
             key="notification"
             isActive={this.state.toastOpen}

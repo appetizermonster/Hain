@@ -34,6 +34,7 @@ class Preferences extends React.Component {
   onModelChange(newModel) {
     // Do not commit if nothing changed
     if (lo_isEqual(newModel, this.state.modelCopy)) return;
+
     this.commitChanges(this.state.selectedPrefId, lo_cloneDeep(newModel));
   }
   commitChanges(prefId, model) {
@@ -139,6 +140,7 @@ class Preferences extends React.Component {
             {listItems}
           </SelectableList>
         </LeftNav>
+
         <div style={{ paddingLeft: '265px', paddingTop: '5px' }}>
           <div style={{ padding: '5px', paddingTop: '0px' }}>
             {schemaForm}
