@@ -29,6 +29,9 @@ Go to [Releases](https://github.com/hainproject/hain/releases), then you can dow
 ## Usage
 Run and press `alt+space` anywhere.
 
+## Themes
+See [THEMES.md](THEMES.md)
+
 ## How to make Plugins
 
 See [Plugin Documentation](http://hainproject.github.io/hain/docs/)
