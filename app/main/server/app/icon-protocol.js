@@ -46,7 +46,7 @@ function register() {
       if (buffer === undefined) {
         platformUtil.fetchFileIconAsPng(filePath, (err, buf) => {
           if (err || buf === null) {
-            logger.error(`internal error ${err}`);
+            logger.error(`[iconprotocol] internal error ${err}`);
             return callback();
           }
           cache.set(cacheKey, buf);
@@ -58,7 +58,7 @@ function register() {
     },
     (err) => {
       if (err) {
-        logger.error('failed to register protocol: icon');
+        logger.error('[iconprotocol] failed to register protocol: icon');
       }
     }
   );
