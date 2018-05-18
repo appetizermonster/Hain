@@ -10,10 +10,9 @@
 
     // DevTools
     document.addEventListener('keydown', function (e) {
-      if (e.which === 123 /* F12 */) {
+      // F12
+      if (e.which === 123) {
         require('electron').remote.getCurrentWindow().toggleDevTools();
-      } else if (e.which === 116 /* F5 */) {
-        location.reload();
       }
     });
     process.env.NODE_ENV = 'production';
