@@ -125,7 +125,7 @@ const defaultThemeDark = {
 };
 
 class ThemeObject {
-  constructor(themeObj = {}, isValid = true) {
+  init(themeObj = {}, isValid = true) {
     this.themeObj = themeObj;
     this._isValid = isValid;
 
@@ -354,13 +354,12 @@ class ThemeObject {
     };
 
     // check format - if it's argb, pop the alpha value from the end and move it to front
-    let a;
     if (format === 'argb') {
       c.push(c.shift());
     }
 
     // convert array into rgba values
-    a = p(c[3]);
+    const a = p(c[3]);
     const cSlice = c.slice(0, 3);
     const rgb = [];
     for (const i in cSlice) {
@@ -403,6 +402,8 @@ class ThemeObject {
 
 class ThemeObjectDefault extends ThemeObject {
   constructor(themeVariant) {
+    super();
+
     let themeObj;
     if (themeVariant === 'dark') {
       themeObj = defaultThemeDark;
@@ -411,7 +412,7 @@ class ThemeObjectDefault extends ThemeObject {
     }
 
     // assign values to object
-    super(themeObj);
+    this.init(themeObj);
 
     this.id = ThemeObject.stripThemeName(themeObj.name);
     this.name = themeObj.name;
@@ -421,12 +422,14 @@ class ThemeObjectDefault extends ThemeObject {
 
 class ThemeObjectAlfredJSON extends ThemeObject {
   constructor(themeObj, themeName) {
+    super();
+
     if (
       typeof themeObj.alfredtheme === 'object' &&
       typeof themeObj.alfredtheme.name === 'string'
     ) {
       // assign values to object
-      super(themeObj.alfredtheme);
+      this.init(themeObj.alfredtheme);
 
       const strippedThemeName = ThemeObject.stripThemeName(
         themeObj.alfredtheme.name
@@ -442,7 +445,7 @@ class ThemeObjectAlfredJSON extends ThemeObject {
         this.fullName += ` (by ${themeObj.alfredtheme.credit})`;
       }
     } else {
-      super({}, false);
+      this.init({}, false);
 
       this.id = themeName;
 
@@ -455,13 +458,15 @@ class ThemeObjectAlfredJSON extends ThemeObject {
 
 class ThemeObjectAlfredXML extends ThemeObject {
   constructor(themeObj, themeName) {
+    super();
+
     if (typeof themeObj === 'object') {
       try {
-        //
+        // convert to Alfred JSON internal format
         const keyObj = ThemeObject.keyObjToAlfredObj(themeObj);
 
         // assign values to object
-        super(keyObj);
+        this.init(keyObj);
 
         // attempt to get name from the XML file
         let strippedThemeName;
@@ -483,7 +488,7 @@ class ThemeObjectAlfredXML extends ThemeObject {
           this.fullName += ` (by ${themeObj.credits})`;
         }
       } catch (err) {
-        super({}, false);
+        this.init({}, false);
 
         this.id = themeName;
 
@@ -496,7 +501,7 @@ class ThemeObjectAlfredXML extends ThemeObject {
         }
       }
     } else {
-      super({}, false);
+      this.init({}, false);
 
       this.id = themeName;
 
@@ -509,15 +514,17 @@ class ThemeObjectAlfredXML extends ThemeObject {
 
 class ThemeObjectThemer extends ThemeObject {
   constructor(themeObj, themeName) {
+    super();
+
     // convert provided Themer format colors / values into Alfred-compatible format
     try {
-      super(ThemeObject.themerObjToAlfredObj(themeObj));
+      this.init(ThemeObject.themerObjToAlfredObj(themeObj));
 
       this.id = ThemeObject.stripThemeName(themeName);
       this.name = themeName;
       this.fullName = themeName;
     } catch (err) {
-      super({}, false);
+      this.init({}, false);
 
       this.id = themeName;
 
