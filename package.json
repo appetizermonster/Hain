@@ -28,7 +28,6 @@
     "del": "^2.2.0",
     "electron": "^2.0.0",
     "electron-packager": "^8.6.0",
-    "electron-rebuild": "^1.5.7",
     "electron-winstaller": "^2.5.2",
     "eslint": "^3.19.0",
     "eslint-config-prettier": "^2.9.0",

@@ -1,6 +1,7 @@
 'use strict';
 
 const lo_assign = require('lodash.assign');
+const semver = require('semver');
 
 const pkg = require('../../../package.json');
 const checkForUpdate = require('./check-update');
@@ -46,7 +47,10 @@ module.exports = (context) => {
 
   function startup() {
     checkForUpdate().then((ret) => {
-      if (ret.version !== pkg.version) {
+      const remoteVersion = ret.version;
+      const isValidVersion = semver.valid(remoteVersion);
+      const isNewVersion = semver.gt(remoteVersion, pkg.version);
+      if (isValidVersion && isNewVersion) {
         toast.enqueue(
           'New version available! Please enter `/hain update`.',
           2500
