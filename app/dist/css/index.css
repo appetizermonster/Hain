@@ -1,14 +1,14 @@
 /* css for index.html */
 
 body {
-  margin: 75px 12px 12px 12px;
+  margin: 12px;
   overflow: hidden;
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
 }
 
 kbd {
-  font-size: 11px;
+  font-size: 12px;
   font-family: 'Roboto', sans-serif;
   color: #888;
   background-color: #eeeeee;

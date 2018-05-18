@@ -35,11 +35,17 @@ class ArrayComponent extends React.Component {
   render() {
     const { schema, model, name, path, onChange, errors } = this.props;
     const arr = model || [];
-    let title = schema.title || name;
-    const description = utils.wrapDescription(schema.description);
 
+    let title = schema.title || name;
     if (title) {
       title = <h4>{title}</h4>;
+    }
+
+    const description = utils.wrapDescription(schema.description);
+
+    let help;
+    if (schema.help) {
+      help = utils.wrapHelp(schema.help);
     }
 
     const childSchema = schema.items;
@@ -105,6 +111,7 @@ class ArrayComponent extends React.Component {
         {title}
         {description}
         <div key="childComponents">{childComponents}</div>
+        {help}
         &nbsp;
         <div style={{ textAlign: 'left' }}>
           <RaisedButton

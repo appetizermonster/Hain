@@ -15,6 +15,16 @@ function wrapDescription(description) {
   );
 }
 
+function wrapHelp(help) {
+  if (help === undefined) return undefined;
+  return (
+    <div
+      style={{ margin: '24px 0 0 0', lineHeight: '1.4', color: '#222222', padding: '16px', background: '#f3f3f3', border: '1px solid #cccccc' }}
+      dangerouslySetInnerHTML={{ __html: help }}
+    />
+  );
+}
+
 function findErrorMessage(errors, path) {
   const errorPath = `instance${path}`;
   for (const error of errors) {
@@ -33,5 +43,6 @@ function findErrorMessage(errors, path) {
 
 module.exports = {
   wrapDescription,
+  wrapHelp,
   findErrorMessage
 };

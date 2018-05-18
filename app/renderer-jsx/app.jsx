@@ -19,6 +19,8 @@ const rpc = RpcChannel.createWithIpcRenderer('#mainWindow', ipc);
 
 const textUtil = require('../main/shared/text-util');
 
+const { ThemeObjectDefault } = require('../main/shared/theme-object');
+
 const Ticket = require('./ticket');
 const searchTicket = new Ticket();
 const previewTicket = new Ticket();
@@ -33,6 +35,7 @@ import {
   FontIcon,
   IconButton
 } from 'material-ui';
+
 import MuiThemeProvider from 'material-ui/lib/MuiThemeProvider';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 import { Notification } from 'react-notification';
@@ -43,11 +46,6 @@ const SelectableList = SelectableContainerEnhance(List);
 const SEND_INTERVAL = 30; // ms
 const CLEAR_INTERVAL = 250; // ms
 
-// HACK to speed up rendering performance
-const muiTheme = getMuiTheme({
-  userAgent: false
-});
-
 class AppContainer extends React.Component {
   constructor() {
     super();
@@ -56,6 +54,7 @@ class AppContainer extends React.Component {
     this.state = {
       query: '',
       results: [],
+      themeObj: new ThemeObjectDefault('light').themeObj,
       selectionIndex: 0,
       toastMessage: '',
       toastOpen: false
@@ -88,6 +87,7 @@ class AppContainer extends React.Component {
 
   componentDidMount() {
     this.refs.query.focus();
+
     rpc.define('notifyPluginsLoaded', () => {
       this.isLoaded = true;
       this.setQuery('');
@@ -158,10 +158,29 @@ class AppContainer extends React.Component {
       if (this.state.previewHtml === html) return;
       this.setState({ previewHtml: html });
     });
+    rpc.define('applyTheme', (themeObj) => {
+      this.setState({ themeObj: themeObj });
+      this.scrollTo(0);
+
+      const _this = this;
+
+      window.requestAnimationFrame(function() {
+        const queryWrapper = ReactDOM.findDOMNode(_this.refs.queryWrapper);
+        const listContainerInner = ReactDOM.findDOMNode(_this.refs.listContainerInner);
+
+        listContainerInner.style.height = `${_this.state.themeObj.window.height - queryWrapper.getBoundingClientRect().height - 38}px`;
+      });
+    });
     setInterval(this.processToast.bind(this), 200);
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const _this = this;
+
+    window.requestAnimationFrame(function() {
+      _this.styleSelectedResult();
+    });
+
     this.updatePreview();
   }
 
@@ -178,10 +197,37 @@ class AppContainer extends React.Component {
     this.scrollTo(_selId);
   }
 
+  styleSelectedResult() {
+    // this is a bit of a hack, but is needed as the selected ListItem state is not automatically made available
+    // to the child secondaryText element, so we have to manually set its style
+    const listItem = this.refs[`item.${this.state.selectionIndex}`];
+
+    if (listItem) {
+      const target_dom = ReactDOM.findDOMNode(listItem);
+      const listContainer_dom = ReactDOM.findDOMNode(this.refs.listContainer);
+
+      // unset color on all subtext elements
+      const listItems_dom = listContainer_dom.querySelectorAll('[data-reactid*="$item"] [data-reactid*="$secondaryText"]');
+
+      if (listItems_dom) {
+        for (let i = 0; i < listItems_dom.length; ++i) {
+          listItems_dom[i].style.color = this.state.themeObj.result.subtext.color;
+        }
+      }
+
+      // set color on target subtext element
+      const targetSubtext_dom = target_dom.querySelector('[data-reactid*="$secondaryText"]');
+      if (targetSubtext_dom) {
+        targetSubtext_dom.style.color = this.state.themeObj.result.subtext.colorSelected;
+      }
+    }
+  }
+
   scrollTo(selectionIndex) {
     const listItem = this.refs[`item.${selectionIndex}`];
     const header = this.refs[`header.${selectionIndex}`];
     const target = header || listItem;
+
     if (target) {
       const target_dom = ReactDOM.findDOMNode(target);
       const listContainer_dom = ReactDOM.findDOMNode(this.refs.listContainer);
@@ -372,6 +418,7 @@ class AppContainer extends React.Component {
     const btnConfig = lo_assign({}, defaultConfig, result.button);
     const fontIcon = (
       <FontIcon
+        style={{ fontSize: 20 }}
         className={btnConfig.className}
         onClick={this.handleRightButtonClick.bind(this, result)}
         color={btnConfig.color}
@@ -407,13 +454,50 @@ class AppContainer extends React.Component {
   }
 
   render() {
+    // set independent theme objects for sections of the main window - this allows us to acheive the styling that we need
+    const muiThemeWindow = getMuiTheme({
+      userAgent: false
+    });
+
+    const muiThemeSearch = getMuiTheme({
+      userAgent: false,
+
+      fontFamily: this.state.themeObj.search.text.font,
+
+      textField: {
+        textColor: this.state.themeObj.search.text.color,
+        focusColor: this.state.themeObj.separator.color,
+        backgroundColor: this.state.themeObj.search.background,
+        borderColor: this.state.themeObj.separator.color
+      }
+    });
+
+    const muiThemeResults = getMuiTheme({
+      userAgent: false,
+
+      fontFamily: this.state.themeObj.result.text.font,
+
+      palette: {
+        textColor: this.state.themeObj.result.text.color,
+      },
+
+      listItem: {
+        secondaryTextColor: this.state.themeObj.result.subtext.color,
+      },
+
+      avatar: {
+        color: this.state.themeObj.result.text.color,
+        backgroundColor: this.state.themeObj.window.color
+      }
+    });
+
     const results = this.state.results;
     const selectionIndex = this.state.selectionIndex;
     const selectedResult = results[selectionIndex];
 
     const list = [];
     const tabIndicator =
-      "<kbd style='font-size: 7pt; margin-left: 5px; opacity: 0.8'>tab</kbd>";
+      "<kbd style='font-size: 12px; margin-left: 5px; opacity: 0.8'>tab</kbd>";
     let lastGroup = null;
     for (let i = 0; i < results.length; ++i) {
       const result = results[i];
@@ -421,13 +505,9 @@ class AppContainer extends React.Component {
       const rightIcon = this.displayRightButton(i);
 
       let title = textUtil.extractText(result.title);
-      const titleStyle = textUtil.extractTextStyle(result.title);
       if (result.redirect) title += tabIndicator;
 
       const desc = textUtil.extractText(result.desc);
-      const descStyle = textUtil.extractTextStyle(result.desc, {
-        fontSize: 13
-      });
 
       if (result.group !== lastGroup) {
         const headerId = `header.${i}`;
@@ -435,7 +515,7 @@ class AppContainer extends React.Component {
           <div key={headerId} ref={headerId}>
             <Subheader
               key="header"
-              style={{ lineHeight: '32px', fontSize: 13 }}
+              style={{ color: this.state.themeObj.search.text.color, lineHeight: '36px' }}
             >
               {result.group}
             </Subheader>
@@ -443,6 +523,7 @@ class AppContainer extends React.Component {
         );
         lastGroup = result.group;
       }
+
       const itemId = `item.${i}`;
       list.push(
         <ListItem
@@ -450,15 +531,17 @@ class AppContainer extends React.Component {
           ref={itemId}
           value={i}
           onKeyboardFocus={this.handleKeyboardFocus.bind(this)}
-          style={{ fontSize: 15, lineHeight: '13px' }}
           primaryText={
             <div
-              style={titleStyle}
+              style={textUtil.extractTextStyle(result.title, { fontSize: this.state.themeObj.result.text.size })}
               dangerouslySetInnerHTML={{ __html: title }}
             />
           }
           secondaryText={
-            <div style={descStyle} dangerouslySetInnerHTML={{ __html: desc }} />
+            <div
+              style={textUtil.extractTextStyle(result.desc, { fontSize: this.state.themeObj.result.subtext.size })}
+              dangerouslySetInnerHTML={{ __html: desc }}
+            />
           }
           onClick={this.handleItemClick.bind(this, i)}
           onKeyDown={this.handleKeyDown.bind(this)}
@@ -487,8 +570,9 @@ class AppContainer extends React.Component {
       transition: 'width 0.35s cubic-bezier(0.23, 1, 0.32, 1)',
       overflowY: 'auto',
       width: '100%',
-      height: '440px'
+      marginTop: '12px'
     };
+
     let previewBox = null;
     if (selectedResult && selectedResult.preview) {
       const previewStyle = {
@@ -497,12 +581,8 @@ class AppContainer extends React.Component {
         overflowX: 'hidden',
         overflowY: 'hidden',
         padding: '10px',
-        paddingRight: '0px',
-        width: '470px',
-        height: '440px'
+        paddingRight: '0'
       };
-      containerStyles.float = 'left';
-      containerStyles.width = '300px';
 
       previewBox = (
         <div style={previewStyle}>
@@ -516,55 +596,66 @@ class AppContainer extends React.Component {
     }
 
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
+      <MuiThemeProvider muiTheme={muiThemeWindow}>
         <div>
           <div
+            ref="queryWrapper"
             key="queryWrapper"
-            style={{ position: 'fixed', zIndex: 1000, top: 0, width: '776px' }}
+            style={{ width: '100%' }}
           >
             <div
               style={{
-                marginTop: '7px',
-                marginBottom: '-8px',
-                color: '#a7a7a7',
+                color: this.state.themeObj.result.subtext.color,
                 fontSize: '12px'
               }}
             >
-              <table style={{ width: '100%' }}>
+              <table style={{ width: '100%', borderSpacing: 0 }}>
                 <tr>
-                  <td style={{ fontWeight: 700, fontSize: '14px' }}>Hain</td>
+                  <td style={{ fontWeight: 700, fontSize: '14px' }}>
+                    Hain
+                  </td>
                   <td style={{ textAlign: 'right' }}>
-                    <kbd>↓</kbd> <kbd>↑</kbd> to navigate, <kbd>tab</kbd> to
-                    expand(redirect), <kbd>enter</kbd> to execute
+                    <span style={{ display: 'inline-block', color: this.state.themeObj.result.subtext.color, opacity: 0.8 }}>
+                      <kbd>↓</kbd> <kbd>↑</kbd> to navigate, <kbd>tab</kbd> to
+                      expand(redirect), <kbd>enter</kbd> to execute
+                    </span>
                   </td>
                 </tr>
               </table>
             </div>
 
-            <div style={{ margin: '6px 2px 0 2px' }}>
-              <TextField
-                key="query"
-                ref="query"
-                fullWidth={true}
-                value={this.state.query}
-                onKeyDown={this.handleKeyDown.bind(this)}
-                onChange={this.handleChange.bind(this)}
-              />
+            <div style={{ margin: `12px 1px 0 1px` }}>
+              <MuiThemeProvider muiTheme={muiThemeSearch}>
+                <TextField
+                  key="query"
+                  ref="query"
+                  fullWidth={true}
+                  style={{ fontSize: this.state.themeObj.search.text.size, height: 'auto' }}
+                  inputStyle={{ padding: `${Math.max(this.state.themeObj.search.paddingVertical, this.state.themeObj.search.text.size)}px ${this.state.themeObj.search.spacing}px` }}
+                  value={this.state.query}
+                  onKeyDown={this.handleKeyDown.bind(this)}
+                  onChange={this.handleChange.bind(this)}
+                />
+              </MuiThemeProvider>
             </div>
           </div>
 
           <div key="containerWrapper">
             <div key="container" ref="listContainer" style={containerStyles}>
-              <SelectableList
-                key="list"
-                style={{ paddingTop: '0px', paddingBottom: '0px' }}
-                valueLink={{
-                  value: selectionIndex,
-                  requestChange: this.handleUpdateSelectionIndex.bind(this)
-                }}
-              >
-                {list}
-              </SelectableList>
+              <MuiThemeProvider muiTheme={muiThemeResults}>
+                <SelectableList
+                  ref="listContainerInner"
+                  key="list"
+                  style={{ paddingTop: '0', paddingBottom: '0' }}
+                  selectedItemStyle={{ backgroundColor: this.state.themeObj.result.backgroundSelected, color: this.state.themeObj.result.text.colorSelected }}
+                  valueLink={{
+                    value: selectionIndex,
+                    requestChange: this.handleUpdateSelectionIndex.bind(this)
+                  }}
+                >
+                  {list}
+                </SelectableList>
+              </MuiThemeProvider>
             </div>
             {previewBox}
           </div>

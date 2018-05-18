@@ -12,6 +12,7 @@ const PrefWindow = require('./ui/pref-window');
 const TrayService = require('./ui/tray-service');
 
 const firstLaunch = require('./first-launch');
+const ThemeService = require('./theme-service');
 const ShortcutService = require('./shortcut-service');
 const iconProtocol = require('./icon-protocol');
 const appIconProtocol = require('./app-icon-protocol');
@@ -31,7 +32,9 @@ module.exports = class AppService {
     this.workerClient = workerClient;
     this.workerProxy = workerProxy;
 
-    this.mainWindow = new MainWindow(workerProxy, prefManager);
+    this.themeService = new ThemeService(this, prefManager.themePref);
+
+    this.mainWindow = new MainWindow(workerProxy, prefManager, this.themeService);
     this.prefWindow = new PrefWindow(prefManager);
     this.trayService = new TrayService(this, autoLauncher);
     this.shortcutService = new ShortcutService(this, prefManager.appPref);
@@ -56,6 +59,7 @@ module.exports = class AppService {
       if (shouldQuit && !isRestarted) return electronApp.quit();
 
       electronApp.on('ready', () => {
+        self.themeService.initialize();
         self.shortcutService.initialize();
 
         self.mainWindow.createWindow(() => {

@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "activeTheme": {
+      "title": "Current theme",
+      "description": "Select the theme that Hain should use",
+      "help": "Read more about Hain themes at <a href=\"https://github.com/hainproject/hain/blob/develop/THEMES.md\">https://github.com/hainproject/hain/blob/develop/THEMES.md</a>",
+      "type": "string",
+      "enum": []
+    }
+  }
+}

@@ -165,6 +165,9 @@ declare namespace hain {
     /** Directory of development plugins (local / manually installed) */
     DEV_PLUGIN_REPO: string;
 
+    /** Directory of UI themes (local / manually installed) */
+    THEMES_REPO: string;
+
     /** Current version of the API that is available */
     CURRENT_API_VERSION: string;
 

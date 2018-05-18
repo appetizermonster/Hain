@@ -12,8 +12,6 @@ const ipc = electron.ipcMain;
 
 function createWindowOptions(appPref) {
   let options = {
-    width: 800,
-    height: 530,
     alwaysOnTop: true,
     center: true,
     frame: false,
@@ -40,9 +38,15 @@ function createWindowOptions(appPref) {
 }
 
 module.exports = class MainWindow {
-  constructor(workerProxy, prefManager) {
+  constructor(workerProxy, prefManager, themeService) {
     this.workerProxy = workerProxy;
     this.appPref = prefManager.appPref;
+    this.themePref = prefManager.themePref;
+    this.themeService = themeService;
+
+    this.themeService.loadThemes();
+
+    this.hasWindowShown = false;
     this.browserWindow = null;
     this.rpc = RpcChannel.create(
       '#mainWindow',
@@ -104,6 +108,11 @@ module.exports = class MainWindow {
     if (this.browserWindow === null) return;
 
     platformUtil.saveFocus();
+
+    if (!this.hasWindowShown) {
+      this.applyTheme(this.themeService.getActiveThemeObj());
+      this.hasWindowShown = true;
+    }
 
     // center the window in the middle of the screen?
     if (!this.browserWindow.isVisible())
@@ -169,6 +178,43 @@ module.exports = class MainWindow {
 
   notifyPluginsReloading() {
     this.rpc.call('notifyPluginsReloading');
+  }
+
+  applyTheme(themeObj) {
+    if (this.browserWindow === null) {
+      return;
+    }
+
+    this.browserWindow.setSize(themeObj.themeObj.window.width, themeObj.themeObj.window.height);
+
+    // set background color?
+    if (typeof themeObj.themeObj.window.color === 'string') {
+      this.browserWindow.webContents.insertCSS(
+        `html { background: ${themeObj.themeObj.window.color} !important; }`
+      );
+    }
+
+    // set scrollbar styling?
+    if ((typeof themeObj.themeObj.scrollbar.thickness === 'number') && (typeof themeObj.themeObj.scrollbar.color === 'string')) {
+      this.browserWindow.webContents.insertCSS(
+        `::-webkit-scrollbar {
+            width: ${themeObj.themeObj.scrollbar.thickness}px !important;
+         }
+         ::-webkit-scrollbar-track {
+           background-color: #eaeaea !important;
+           border-radius: ${themeObj.themeObj.scrollbar.thickness / 2}px !important;
+         }
+         ::-webkit-scrollbar-thumb {
+           background-color: ${themeObj.themeObj.scrollbar.color} !important;
+           border-radius: ${themeObj.themeObj.scrollbar.thickness / 2}px !important;
+         }
+         ::-webkit-scrollbar-thumb:hover {
+           background-color: #aaa !important;
+         }`
+      );
+    }
+
+    this.rpc.call('applyTheme', themeObj.themeObj);
   }
 
   isContentLoading() {

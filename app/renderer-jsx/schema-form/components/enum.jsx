@@ -13,12 +13,19 @@ class EnumComponent extends React.Component {
 
   render() {
     const { schema, model, name } = this.props;
-    let title = schema.title || name;
-    const description = utils.wrapDescription(schema.description);
     const items = [];
 
-    if (title !== undefined)
+    let title = schema.title || name;
+    if (title !== undefined) {
       title = <h5 style={{ marginBottom: '2px' }}>{title}</h5>;
+    }
+
+    const description = utils.wrapDescription(schema.description);
+
+    let help;
+    if (schema.help) {
+      help = utils.wrapHelp(schema.help);
+    }
 
     for (const itemData of schema.enum) {
       const item = <MenuItem primaryText={itemData} value={itemData} />;
@@ -38,6 +45,7 @@ class EnumComponent extends React.Component {
         >
           {items}
         </SelectField>
+        {help}
       </div>
     );
   }
