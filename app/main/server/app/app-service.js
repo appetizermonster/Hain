@@ -34,7 +34,11 @@ module.exports = class AppService {
 
     this.themeService = new ThemeService(this, prefManager.themePref);
 
-    this.mainWindow = new MainWindow(workerProxy, prefManager, this.themeService);
+    this.mainWindow = new MainWindow(
+      workerProxy,
+      prefManager,
+      this.themeService
+    );
     this.prefWindow = new PrefWindow(prefManager);
     this.trayService = new TrayService(this, autoLauncher);
     this.shortcutService = new ShortcutService(this, prefManager.appPref);

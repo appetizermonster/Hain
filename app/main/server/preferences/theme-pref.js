@@ -17,13 +17,11 @@ const themeService = new ThemeService();
 themeService.loadThemes();
 
 // set list of loaded themes into the preferences UI control
-let userThemes = [];
+const userThemes = [];
 
-for (let i in themeService.userThemesObjs) {
+for (const i in themeService.userThemesObjs) {
   if (themeService.userThemesObjs[i].valid) {
-    userThemes.push(
-      themeService.userThemesObjs[i].fullName
-    );
+    userThemes.push(themeService.userThemesObjs[i].fullName);
   }
 }
 
@@ -32,7 +30,11 @@ themePrefSchema.properties.activeTheme.enum = themePrefSchema.properties.activeT
 );
 
 // prepend user themes location to field help message
-themePrefSchema.properties.activeTheme.help = `Simply drop supported theme files into <code><a href="file:///${conf.THEME_REPO}">${conf.THEME_REPO}</a></code><br /><br />${themePrefSchema.properties.activeTheme.help}`;
+themePrefSchema.properties.activeTheme.help = `Simply drop supported theme files into <code><a href="file:///${
+  conf.THEME_REPO
+}">${conf.THEME_REPO}</a></code><br /><br />${
+  themePrefSchema.properties.activeTheme.help
+}`;
 
 module.exports = new PreferencesObject(
   themePrefStore,

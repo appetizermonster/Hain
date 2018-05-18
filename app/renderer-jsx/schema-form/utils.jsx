@@ -19,7 +19,14 @@ function wrapHelp(help) {
   if (help === undefined) return undefined;
   return (
     <div
-      style={{ margin: '24px 0 0 0', lineHeight: '1.4', color: '#222222', padding: '16px', background: '#f3f3f3', border: '1px solid #cccccc' }}
+      style={{
+        margin: '24px 0 0 0',
+        lineHeight: '1.4',
+        color: '#222222',
+        padding: '16px',
+        background: '#f3f3f3',
+        border: '1px solid #cccccc'
+      }}
       dangerouslySetInnerHTML={{ __html: help }}
     />
   );

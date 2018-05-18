@@ -131,8 +131,12 @@ class ThemeObject {
 
     // set window width / height values if undefined
     this.themeObj.window = this.themeObj.window || {};
-    this.themeObj.window.width = parseInt(this.themeObj.window.width, 10) || defaultThemeLight.window.width;
-    this.themeObj.window.height = parseInt(this.themeObj.window.height, 10) || defaultThemeLight.window.height;
+    this.themeObj.window.width =
+      parseInt(this.themeObj.window.width, 10) ||
+      defaultThemeLight.window.width;
+    this.themeObj.window.height =
+      parseInt(this.themeObj.window.height, 10) ||
+      defaultThemeLight.window.height;
 
     // process color values
     this.processColors();
@@ -171,11 +175,14 @@ class ThemeObject {
   }
 
   static stripThemeName(themeName) {
-    return themeName.replace('.alfredtheme', '').replace('.alfredappearance', '').toLowerCase();
+    return themeName
+      .replace('.alfredtheme', '')
+      .replace('.alfredappearance', '')
+      .toLowerCase();
   }
 
   static humanizeThemeName(themeName) {
-    let str = themeName.split(' ');
+    const str = themeName.split(' ');
 
     for (let i = 0; i < str.length; i++) {
       str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
@@ -246,7 +253,7 @@ class ThemeObject {
 
   static keyObjToAlfredObj(colorKeyObj) {
     // iterate through all color values, halting if we encounter any unparsable NSColor objects
-    for (let i in colorKeyObj) {
+    for (const i in colorKeyObj) {
       if (typeof colorKeyObj[i] === 'object') {
         throw RangeError(
           'XML theme parser does not support colors encoded as NSColor'
@@ -288,9 +295,9 @@ class ThemeObject {
           size: 22,
           colorSelected: colorKeyObj.searchFieldTextColor,
           font: '"Roboto", sans-serif',
-          color: colorKeyObj.searchFieldTextColor,
+          color: colorKeyObj.searchFieldTextColor
         },
-        backgroundSelected: colorKeyObj.searchFieldBackgroundColor,
+        backgroundSelected: colorKeyObj.searchFieldBackgroundColor
       },
       window: {
         color: colorKeyObj.backgroundColor,
@@ -329,7 +336,7 @@ class ThemeObject {
     }
 
     // split to four channels
-    let c = hex.match(/.{2}/g);
+    const c = hex.match(/.{2}/g);
 
     // guard against invalid color split
     if (c.length !== 4) {
@@ -337,13 +344,13 @@ class ThemeObject {
     }
 
     // function: to decimals (for RGB)
-    let d = function(v) {
+    const d = function(v) {
       return parseInt(v, 16);
     };
 
     // function: to percentage (for alpha), to 3 decimals
-    let p = function(v) {
-      return parseFloat(parseInt((parseInt(v, 16)/255)*1000)/1000);
+    const p = function(v) {
+      return parseFloat(parseInt(parseInt(v, 16) / 255 * 1000) / 1000);
     };
 
     // check format - if it's argb, pop the alpha value from the end and move it to front
@@ -355,8 +362,8 @@ class ThemeObject {
     // convert array into rgba values
     a = p(c[3]);
     const cSlice = c.slice(0, 3);
-    let rgb = [];
-    for (let i in cSlice) {
+    const rgb = [];
+    for (const i in cSlice) {
       rgb.push(d(cSlice[i]));
     }
 
@@ -371,7 +378,7 @@ class ThemeObject {
 
   processColors() {
     function recurse(initial) {
-      for (let prop in initial) {
+      for (const prop in initial) {
         if ({}.hasOwnProperty.call(initial, prop)) {
           if (typeof initial[prop] === 'object') {
             recurse(initial[prop]);
@@ -414,11 +421,16 @@ class ThemeObjectDefault extends ThemeObject {
 
 class ThemeObjectAlfredJSON extends ThemeObject {
   constructor(themeObj, themeName) {
-    if ((typeof themeObj.alfredtheme === 'object') && (typeof themeObj.alfredtheme.name === 'string')) {
+    if (
+      typeof themeObj.alfredtheme === 'object' &&
+      typeof themeObj.alfredtheme.name === 'string'
+    ) {
       // assign values to object
       super(themeObj.alfredtheme);
 
-      const strippedThemeName = ThemeObject.stripThemeName(themeObj.alfredtheme.name);
+      const strippedThemeName = ThemeObject.stripThemeName(
+        themeObj.alfredtheme.name
+      );
       const humanThemeName = ThemeObject.humanizeThemeName(strippedThemeName);
 
       this.id = strippedThemeName;
@@ -429,7 +441,6 @@ class ThemeObjectAlfredJSON extends ThemeObject {
       if (typeof themeObj.alfredtheme.credit === 'string') {
         this.fullName += ` (by ${themeObj.alfredtheme.credit})`;
       }
-
     } else {
       super({}, false);
 
@@ -471,24 +482,19 @@ class ThemeObjectAlfredXML extends ThemeObject {
         if (typeof themeObj.credits === 'string') {
           this.fullName += ` (by ${themeObj.credits})`;
         }
-
       } catch (err) {
         super({}, false);
 
         this.id = themeName;
 
         if (err instanceof RangeError) {
-          console.log(
-            `[theme-object] ${err.message}`
-          );
-
+          console.log(`[theme-object] ${err.message}`);
         } else {
           console.log(
             `[theme-object] error parsing "${themeName}" Alfred XML file into color scheme`
           );
         }
       }
-
     } else {
       super({}, false);
 
@@ -510,7 +516,6 @@ class ThemeObjectThemer extends ThemeObject {
       this.id = ThemeObject.stripThemeName(themeName);
       this.name = themeName;
       this.fullName = themeName;
-
     } catch (err) {
       super({}, false);
 

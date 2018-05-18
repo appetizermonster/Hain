@@ -164,11 +164,16 @@ class AppContainer extends React.Component {
 
       const _this = this;
 
-      window.requestAnimationFrame(function() {
+      window.requestAnimationFrame(() => {
         const queryWrapper = ReactDOM.findDOMNode(_this.refs.queryWrapper);
-        const listContainerInner = ReactDOM.findDOMNode(_this.refs.listContainerInner);
+        const listContainerInner = ReactDOM.findDOMNode(
+          _this.refs.listContainerInner
+        );
 
-        listContainerInner.style.height = `${_this.state.themeObj.window.height - queryWrapper.getBoundingClientRect().height - 38}px`;
+        listContainerInner.style.height = `${_this.state.themeObj.window
+          .height -
+          queryWrapper.getBoundingClientRect().height -
+          38}px`;
       });
     });
     setInterval(this.processToast.bind(this), 200);
@@ -177,7 +182,7 @@ class AppContainer extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const _this = this;
 
-    window.requestAnimationFrame(function() {
+    window.requestAnimationFrame(() => {
       _this.styleSelectedResult();
     });
 
@@ -207,16 +212,22 @@ class AppContainer extends React.Component {
       const listContainer_dom = ReactDOM.findDOMNode(this.refs.listContainer);
 
       // unset color on all subtext elements
-      const listItems_dom = listContainer_dom.querySelectorAll('[data-reactid*="$item"] [data-reactid*="$secondaryText"]');
+      const listItems_dom = listContainer_dom.querySelectorAll(
+        '[data-reactid*="$item"] [data-reactid*="$secondaryText"]'
+      );
 
       if (listItems_dom) {
         for (let i = 0; i < listItems_dom.length; ++i) {
-          listItems_dom[i].style.color = this.state.themeObj.result.subtext.color;
+          listItems_dom[
+            i
+          ].style.color = this.state.themeObj.result.subtext.color;
         }
       }
 
       // set color on target subtext element
-      const targetSubtext_dom = target_dom.querySelector('[data-reactid*="$secondaryText"]');
+      const targetSubtext_dom = target_dom.querySelector(
+        '[data-reactid*="$secondaryText"]'
+      );
       if (targetSubtext_dom) {
         targetSubtext_dom.style.color = this.state.themeObj.result.subtext.colorSelected;
       }
@@ -478,11 +489,11 @@ class AppContainer extends React.Component {
       fontFamily: this.state.themeObj.result.text.font,
 
       palette: {
-        textColor: this.state.themeObj.result.text.color,
+        textColor: this.state.themeObj.result.text.color
       },
 
       listItem: {
-        secondaryTextColor: this.state.themeObj.result.subtext.color,
+        secondaryTextColor: this.state.themeObj.result.subtext.color
       },
 
       avatar: {
@@ -515,7 +526,10 @@ class AppContainer extends React.Component {
           <div key={headerId} ref={headerId}>
             <Subheader
               key="header"
-              style={{ color: this.state.themeObj.search.text.color, lineHeight: '36px' }}
+              style={{
+                color: this.state.themeObj.search.text.color,
+                lineHeight: '36px'
+              }}
             >
               {result.group}
             </Subheader>
@@ -533,13 +547,17 @@ class AppContainer extends React.Component {
           onKeyboardFocus={this.handleKeyboardFocus.bind(this)}
           primaryText={
             <div
-              style={textUtil.extractTextStyle(result.title, { fontSize: this.state.themeObj.result.text.size })}
+              style={textUtil.extractTextStyle(result.title, {
+                fontSize: this.state.themeObj.result.text.size
+              })}
               dangerouslySetInnerHTML={{ __html: title }}
             />
           }
           secondaryText={
             <div
-              style={textUtil.extractTextStyle(result.desc, { fontSize: this.state.themeObj.result.subtext.size })}
+              style={textUtil.extractTextStyle(result.desc, {
+                fontSize: this.state.themeObj.result.subtext.size
+              })}
               dangerouslySetInnerHTML={{ __html: desc }}
             />
           }
@@ -598,11 +616,7 @@ class AppContainer extends React.Component {
     return (
       <MuiThemeProvider muiTheme={muiThemeWindow}>
         <div>
-          <div
-            ref="queryWrapper"
-            key="queryWrapper"
-            style={{ width: '100%' }}
-          >
+          <div ref="queryWrapper" key="queryWrapper" style={{ width: '100%' }}>
             <div
               style={{
                 color: this.state.themeObj.result.subtext.color,
@@ -611,11 +625,15 @@ class AppContainer extends React.Component {
             >
               <table style={{ width: '100%', borderSpacing: 0 }}>
                 <tr>
-                  <td style={{ fontWeight: 700, fontSize: '14px' }}>
-                    Hain
-                  </td>
+                  <td style={{ fontWeight: 700, fontSize: '14px' }}>Hain</td>
                   <td style={{ textAlign: 'right' }}>
-                    <span style={{ display: 'inline-block', color: this.state.themeObj.result.subtext.color, opacity: 0.8 }}>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        color: this.state.themeObj.result.subtext.color,
+                        opacity: 0.8
+                      }}
+                    >
                       <kbd>↓</kbd> <kbd>↑</kbd> to navigate, <kbd>tab</kbd> to
                       expand(redirect), <kbd>enter</kbd> to execute
                     </span>
@@ -630,8 +648,16 @@ class AppContainer extends React.Component {
                   key="query"
                   ref="query"
                   fullWidth={true}
-                  style={{ fontSize: this.state.themeObj.search.text.size, height: 'auto' }}
-                  inputStyle={{ padding: `${Math.max(this.state.themeObj.search.paddingVertical, this.state.themeObj.search.text.size)}px ${this.state.themeObj.search.spacing}px` }}
+                  style={{
+                    fontSize: this.state.themeObj.search.text.size,
+                    height: 'auto'
+                  }}
+                  inputStyle={{
+                    padding: `${Math.max(
+                      this.state.themeObj.search.paddingVertical,
+                      this.state.themeObj.search.text.size
+                    )}px ${this.state.themeObj.search.spacing}px`
+                  }}
                   value={this.state.query}
                   onKeyDown={this.handleKeyDown.bind(this)}
                   onChange={this.handleChange.bind(this)}
@@ -647,7 +673,11 @@ class AppContainer extends React.Component {
                   ref="listContainerInner"
                   key="list"
                   style={{ paddingTop: '0', paddingBottom: '0' }}
-                  selectedItemStyle={{ backgroundColor: this.state.themeObj.result.backgroundSelected, color: this.state.themeObj.result.text.colorSelected }}
+                  selectedItemStyle={{
+                    backgroundColor: this.state.themeObj.result
+                      .backgroundSelected,
+                    color: this.state.themeObj.result.text.colorSelected
+                  }}
                   valueLink={{
                     value: selectionIndex,
                     requestChange: this.handleUpdateSelectionIndex.bind(this)

@@ -185,7 +185,10 @@ module.exports = class MainWindow {
       return;
     }
 
-    this.browserWindow.setSize(themeObj.themeObj.window.width, themeObj.themeObj.window.height);
+    this.browserWindow.setSize(
+      themeObj.themeObj.window.width,
+      themeObj.themeObj.window.height
+    );
 
     // set background color?
     if (typeof themeObj.themeObj.window.color === 'string') {
@@ -195,18 +198,23 @@ module.exports = class MainWindow {
     }
 
     // set scrollbar styling?
-    if ((typeof themeObj.themeObj.scrollbar.thickness === 'number') && (typeof themeObj.themeObj.scrollbar.color === 'string')) {
+    if (
+      typeof themeObj.themeObj.scrollbar.thickness === 'number' &&
+      typeof themeObj.themeObj.scrollbar.color === 'string'
+    ) {
       this.browserWindow.webContents.insertCSS(
         `::-webkit-scrollbar {
             width: ${themeObj.themeObj.scrollbar.thickness}px !important;
          }
          ::-webkit-scrollbar-track {
            background-color: #eaeaea !important;
-           border-radius: ${themeObj.themeObj.scrollbar.thickness / 2}px !important;
+           border-radius: ${themeObj.themeObj.scrollbar.thickness /
+             2}px !important;
          }
          ::-webkit-scrollbar-thumb {
            background-color: ${themeObj.themeObj.scrollbar.color} !important;
-           border-radius: ${themeObj.themeObj.scrollbar.thickness / 2}px !important;
+           border-radius: ${themeObj.themeObj.scrollbar.thickness /
+             2}px !important;
          }
          ::-webkit-scrollbar-thumb:hover {
            background-color: #aaa !important;

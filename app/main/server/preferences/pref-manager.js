@@ -38,7 +38,6 @@ module.exports = class PrefManager {
   getPreferences(prefId) {
     if (prefId === APP_PREF_ID) {
       return this.appPref.toPrefFormat();
-
     } else if (prefId === THEME_PREF_ID) {
       return this.themePref.toPrefFormat();
     }
@@ -49,7 +48,6 @@ module.exports = class PrefManager {
     if (prefId === APP_PREF_ID) {
       this.appPref.update(model);
       return;
-
     } else if (prefId === THEME_PREF_ID) {
       this.themePref.update(model);
       return;
@@ -61,7 +59,6 @@ module.exports = class PrefManager {
     if (prefId === APP_PREF_ID) {
       this.appPref.reset();
       return;
-
     } else if (prefId === THEME_PREF_ID) {
       this.themePref.reset();
       return;
