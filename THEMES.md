@@ -18,26 +18,31 @@ Hain now has extensive theme support, and comes bundled with default Light and D
 
 <p align="center">
   <img src="docs/themes/total_clean.png" />
+  <br />
   <a id="total_clean" href="https://github.com/thanasisrig/total-clean" target="_blank">Total Clean for Alfred 3 (by thanasisrig)</a>
 </p>
 
 <p align="center">
-  <img src="docs/themes/jongold_green.png" />
-  <a id="jongold_green" href="https://github.com/jongold/alfred-themes" target="_blank">jgold Green (by jongold)</a>
+  <img src="docs/themes/jgold_green.png" />
+  <br />
+  <a id="jgold_green" href="https://github.com/jongold/alfred-themes" target="_blank">jgold Green (by jongold)</a>
 </p>
 
 <p align="center">
-  <img src="docs/themes/jongold_orange.png" />
-  <a id="jongold_orange" href="https://github.com/jongold/alfred-themes" target="_blank">jgold Orange (by jongold)</a>
+  <img src="docs/themes/jgold_orange.png" />
+  <br />
+  <a id="jgold_orange" href="https://github.com/jongold/alfred-themes" target="_blank">jgold Orange (by jongold)</a>
 </p>
 
 <p align="center">
   <img src="docs/themes/themer_colors_polar_ice_light.png" />
+  <br />
   <a id="themer_colors_polar_ice_light" href="https://github.com/mjswensen/themer#themer-color-sets" target="_blank">Themer Colors Polar Ice - Light (by mjswensen)</a>
 </p>
 
 <p align="center">
   <img src="docs/themes/themer_colors_polar_ice_dark.png" />
+  <br />
   <a id="themer_colors_polar_ice_dark" href="https://github.com/mjswensen/themer#themer-color-sets" target="_blank">Themer Colors Polar Ice - Dark (by mjswensen)</a>
 </p>
 
@@ -48,8 +53,6 @@ Hain now has extensive theme support, and comes bundled with default Light and D
 
 
 ## Technical details
-
-There's scope for further improvements (I have some more ideas!) and tweaks to the theme interpretation, but it worked well with the 10 random 3rd party themes I tested this with.
 
 Additional 3rd party theme files (see below for the formats supported) simply need to be dropped into the user preferences directory, eg. `C:\Users\danny\AppData\Local\hain-user\themes` where they will be scanned on app startup.
 

@@ -24,7 +24,6 @@ module.exports = class ShortcutService {
 
   registerBasicToggleShortcut() {
     const shortcut = this.appPref.get('shortcut');
-
     const query = this.appPref.get('clearQuery') ? '' : undefined;
     try {
       this._registerShortcut(shortcut, query);

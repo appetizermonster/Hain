@@ -7,12 +7,14 @@
   <link rel="stylesheet" href="./lib/common.css">
   <script type="text/javascript">
     window.$ = window.jQuery = require('jquery');
-
     // DevTools
     document.addEventListener('keydown', function (e) {
-      // F12
       if (e.which === 123) {
+        // F12
         require('electron').remote.getCurrentWindow().toggleDevTools();
+      } else if (e.which === 116) {
+        // F5
+        location.reload();
       }
     });
     process.env.NODE_ENV = 'production';

@@ -29,9 +29,7 @@ module.exports = class PrefManager {
         id,
         group: 'Plugins'
       }));
-
       const prefItems = appStaticPrefs.concat(pluginPrefItems);
-
       return prefItems;
     });
   }
@@ -41,7 +39,6 @@ module.exports = class PrefManager {
     } else if (prefId === THEME_PREF_ID) {
       return this.themePref.toPrefFormat();
     }
-
     return this.workerProxy.getPreferences(prefId);
   }
   updatePreferences(prefId, model) {
@@ -52,7 +49,6 @@ module.exports = class PrefManager {
       this.themePref.update(model);
       return;
     }
-
     this.workerProxy.updatePreferences(prefId, model);
   }
   resetPreferences(prefId) {
@@ -63,7 +59,6 @@ module.exports = class PrefManager {
       this.themePref.reset();
       return;
     }
-
     this.workerProxy.resetPreferences(prefId);
   }
   verifyPreferences() {
@@ -71,7 +66,6 @@ module.exports = class PrefManager {
   }
   commitPreferences() {
     this.workerProxy.commitPreferences();
-
     if (this.appPref.isDirty) {
       this.workerProxy.updateAppPreferences(this.appPref.get());
       this.appPref.commit();

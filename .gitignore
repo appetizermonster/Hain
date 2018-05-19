@@ -18,4 +18,3 @@ node_modules
 npm-debug.log.*
 
 /local
-package-lock.json

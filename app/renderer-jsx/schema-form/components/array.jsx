@@ -42,11 +42,7 @@ class ArrayComponent extends React.Component {
     }
 
     const description = utils.wrapDescription(schema.description);
-
-    let help;
-    if (schema.help) {
-      help = utils.wrapHelp(schema.help);
-    }
+    const help = schema.help && utils.wrapHelp(schema.help);
 
     const childSchema = schema.items;
     const ChildComponent = componentSelector.select(childSchema);
