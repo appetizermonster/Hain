@@ -6,10 +6,12 @@ Hain now has extensive theme support, and comes bundled with default Light and D
 
 <p align="center">
   <img src="docs/themes/hain_light.png" />
+  <br />
   <a id="hain_light">Hain Light (by dannya)</a>
 </p>
 <p align="center">
   <img src="docs/themes/hain_dark.png" />
+  <br />
   <a id="hain_dark">Hain Dark (by dannya)</a>
 </p>
 
