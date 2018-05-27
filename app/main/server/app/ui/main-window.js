@@ -10,33 +10,6 @@ const RpcChannel = require('../../../shared/rpc-channel');
 
 const ipc = electron.ipcMain;
 
-function createWindowOptions(appPref) {
-  let options = {
-    alwaysOnTop: true,
-    center: true,
-    frame: false,
-    show: false,
-    closable: false,
-    minimizable: false,
-    maximizable: false,
-    moveable: false,
-    resizable: false,
-    skipTaskbar: true,
-    transparent: appPref.get('enableTransparency') || false
-  };
-
-  const isDarwin = process.platform === 'darwin';
-  if (isDarwin) {
-    options = {
-      ...options,
-      titleBarStyle: 'hidden',
-      vibrancy: 'popover'
-    };
-  }
-
-  return options;
-}
-
 module.exports = class MainWindow {
   constructor(workerProxy, prefManager, themeService) {
     this.workerProxy = workerProxy;
@@ -58,7 +31,40 @@ module.exports = class MainWindow {
   }
 
   createWindow(onComplete) {
-    const browserWindow = new BrowserWindow(createWindowOptions(this.appPref));
+    // set initial window options
+    let options = {
+      alwaysOnTop: true,
+      center: true,
+      frame: false,
+      show: false,
+      closable: false,
+      minimizable: false,
+      maximizable: false,
+      moveable: false,
+      resizable: false,
+      skipTaskbar: true
+    };
+
+    // set vibrancy (background window blur) for supported platforms
+    const isDarwin = process.platform === 'darwin';
+    if (isDarwin) {
+      // all of these options are needed to enable vibrancy on MacOS
+      options = {
+        ...options,
+        titleBarStyle: 'hidden',
+        vibrancy: 'popover',
+        transparent: true
+      };
+    } else {
+      // if not on MacOS, set window transparency based on user config value (default: false)
+      options = {
+        ...options,
+        transparent: this.themePref.get('enableTransparency') || false
+      };
+    }
+
+    // create browser window object from options defined above
+    const browserWindow = new BrowserWindow(options);
 
     if (onComplete) browserWindow.webContents.on('did-finish-load', onComplete);
 
