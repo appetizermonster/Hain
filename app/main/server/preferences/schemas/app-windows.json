@@ -11,11 +11,6 @@
       "title": "Open window on the currently active display",
       "default": true
     },
-    "enableTransparency": {
-      "type": "boolean",
-      "title": "Enable transparency (may cause flickering, requires restart)",
-      "default": false
-    },
 
     "shortcut": {
       "type": "string",

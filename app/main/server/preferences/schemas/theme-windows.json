@@ -1,6 +1,11 @@
 {
   "type": "object",
   "properties": {
+    "enableTransparency": {
+      "type": "boolean",
+      "title": "Enable transparency (may cause flickering, requires restart)",
+      "default": false
+    },
     "activeTheme": {
       "title": "Current theme",
       "description": "Select the theme that Hain should use",
