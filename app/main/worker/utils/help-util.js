@@ -2,6 +2,8 @@
 
 const lo_shuffle = require('lodash.shuffle');
 
+const conf = require('../../conf');
+
 const textUtil = require('../../shared/text-util');
 const matchUtil = require('../../shared/match-util');
 
@@ -13,7 +15,7 @@ function makeIntroHelp(pluginConfig) {
     title: textUtil.sanitize(usage),
     desc: textUtil.sanitize(pluginConfig.name),
     icon: pluginConfig.icon,
-    group: 'Plugins'
+    group: conf.PREF_GROUP_PLUGINS
   };
 }
 
@@ -27,7 +29,7 @@ function makePrefixHelp(pluginConfig, query) {
       payload: pluginConfig.redirect,
       title: textUtil.sanitize(matchUtil.makeStringBoldHtml(x.elem, x.matches)),
       desc: textUtil.sanitize(pluginConfig.name),
-      group: 'Plugin Commands',
+      group: conf.PREF_GROUP_PLUGIN_COMMANDS,
       icon: pluginConfig.icon
     };
   });

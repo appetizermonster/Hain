@@ -20,6 +20,13 @@ const MAIN_PLUGIN_REPO = path.resolve(`${HAIN_USER_PATH}/plugins`);
 const DEV_PLUGIN_REPO = path.resolve(`${HAIN_USER_PATH}/devplugins`);
 const THEME_REPO = path.resolve(`${HAIN_USER_PATH}/themes`);
 
+const APP_PREF_ID = 'Hain';
+const THEME_PREF_ID = 'Themes';
+
+const PREF_GROUP_APPLICATION = 'Application';
+const PREF_GROUP_PLUGINS = 'Plugins';
+const PREF_GROUP_PLUGIN_COMMANDS = 'Plugin Commands';
+
 const _apiVersionInfo = pkg._apiVersion;
 const CURRENT_API_VERSION = _apiVersionInfo.currentVersion;
 const COMPATIBLE_API_VERSIONS = [CURRENT_API_VERSION].concat(
@@ -37,6 +44,11 @@ module.exports = {
   MAIN_PLUGIN_REPO,
   DEV_PLUGIN_REPO,
   THEME_REPO,
+  APP_PREF_ID,
+  THEME_PREF_ID,
+  PREF_GROUP_APPLICATION,
+  PREF_GROUP_PLUGINS,
+  PREF_GROUP_PLUGIN_COMMANDS,
   LOCAL_STORAGE_DIR,
   PLUGIN_REPOS,
   __PLUGIN_PREINSTALL_DIR,
