@@ -4,20 +4,27 @@ const electron = require('electron');
 const shell = electron.shell;
 const dialog = electron.dialog;
 const BrowserWindow = electron.BrowserWindow;
+
+const conf = require('../../../conf');
 const windowUtil = require('./window-util');
 const RpcChannel = require('../../../shared/rpc-channel');
+
 
 const ipc = electron.ipcMain;
 
 module.exports = class PrefWindow {
-  constructor(prefManager) {
+  constructor(appService, prefManager) {
     this.browserWindow = null;
+
+    this.appService = appService;
     this.prefManager = prefManager;
+
     this.rpc = RpcChannel.create(
       '#prefWindow',
       this._send.bind(this),
       this._on.bind(this)
     );
+
     this._setupHandlers();
   }
   _setupHandlers() {
@@ -46,19 +53,72 @@ module.exports = class PrefWindow {
     this._createAndShow(url);
   }
   _createAndShow(url) {
+    const themePreferencesOnOpen = this.prefManager.getPreferences(conf.THEME_PREF_ID).model;
+
     this.browserWindow = new BrowserWindow({
       width: 800,
       height: 650,
       show: false
     });
+
     this.browserWindow.loadURL(url);
+
     this.browserWindow.on('close', (evt) => {
+      // ensure any shortcuts entered are valid - if not, raise alert message box and do not save preferences
       if (!this.prefManager.verifyPreferences()) {
-        dialog.showErrorBox('Hain', 'Invalid shortcut.');
         evt.preventDefault();
-      } else {
+        dialog.showErrorBox('Hain', 'Invalid shortcut.');
+
+        return;
+      }
+
+      // check for changed "enable transparency" setting...
+      const themePreferencesOnClose = this.prefManager.getPreferences(conf.THEME_PREF_ID).model;
+
+      if (themePreferencesOnOpen.enableTransparency === themePreferencesOnClose.enableTransparency) {
+        // ..."enable transparency" setting has not changed
         this.prefManager.commitPreferences();
         this.browserWindow = null;
+
+        return;
+
+      } else {
+        // ..."enable transparency" setting has changed - ask user if they would like to restart app, or cancel change
+        const clickedButton = dialog.showMessageBox({
+          type: 'question',
+          title: 'Change transparency setting and restart?',
+          message: 'Changing the transparency setting requires Hain to restart.',
+          buttons: [
+            'Change setting and restart',
+            'Revert to previous setting',
+            'Cancel'
+          ]
+        });
+
+        if (clickedButton === 0) {
+          // commit setting change, then restart app
+          this.prefManager.commitPreferences();
+          this.browserWindow = null;
+
+          this.appService.restart();
+
+          return;
+
+        } else if (clickedButton === 1) {
+          // revert setting then close pref window
+          var modifiedThemePreferences = this.prefManager.getPreferences(conf.THEME_PREF_ID);
+          modifiedThemePreferences.model.enableTransparency = !modifiedThemePreferences.model.enableTransparency;
+
+          this.prefManager.commitPreferences();
+          this.browserWindow = null;
+
+          return;
+
+        } else if (clickedButton === 2) {
+          // cancel change and do not close pref window
+          evt.preventDefault();
+          return;
+        }
       }
     });
 
