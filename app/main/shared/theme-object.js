@@ -47,7 +47,7 @@ const defaultThemeLight = {
     backgroundSelected: ''
   },
   window: {
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: 'rgba(255, 255, 255, 0.5)',
     paddingHorizontal: 10,
     width: 560,
     height: 544,
@@ -109,7 +109,7 @@ const defaultThemeDark = {
     backgroundSelected: ''
   },
   window: {
-    color: 'rgba(0, 0, 0, 0.7)',
+    color: 'rgba(0, 0, 0, 0.5)',
     paddingHorizontal: 10,
     width: 560,
     height: 544,
@@ -343,8 +343,6 @@ class ThemeObject {
   }
 
   static determineTransparentColor(themeObj, color) {
-    console.log(themeObj);
-
     // return color to be set if:
     // * window transparency is not enabled, or
     // * window transparency is enabled and the color has transparency
