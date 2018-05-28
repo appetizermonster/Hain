@@ -47,10 +47,10 @@ const defaultThemeLight = {
     backgroundSelected: ''
   },
   window: {
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: 'rgba(255, 255, 255, 0.8)',
     paddingHorizontal: 10,
-    width: 560,
-    height: 544,
+    width: conf.DEFAULT_WINDOW_WIDTH,
+    height: conf.DEFAULT_WINDOW_HEIGHT,
     borderPadding: 0,
     borderColor: '',
     blur: 15,
@@ -109,10 +109,10 @@ const defaultThemeDark = {
     backgroundSelected: ''
   },
   window: {
-    color: 'rgba(0, 0, 0, 0.5)',
+    color: 'rgba(0, 0, 0, 0.7)',
     paddingHorizontal: 10,
-    width: 560,
-    height: 544,
+    width: conf.DEFAULT_WINDOW_WIDTH,
+    height: conf.DEFAULT_WINDOW_HEIGHT,
     borderPadding: 0,
     borderColor: '',
     blur: 15,
@@ -250,7 +250,7 @@ class ThemeObject {
       window: {
         color: `${colors.shade0}CC`,
         paddingHorizontal: 10,
-        width: 560,
+        width: conf.DEFAULT_WINDOW_WIDTH,
         borderPadding: 0,
         borderColor: `${colors.shade0}00`,
         blur: 15,
@@ -319,7 +319,7 @@ class ThemeObject {
       window: {
         color: colorKeyObj.backgroundColor,
         paddingHorizontal: 10,
-        width: 560,
+        width: conf.DEFAULT_WINDOW_WIDTH,
         borderPadding: 0,
         borderColor: colorKeyObj.borderColor,
         blur: 15,

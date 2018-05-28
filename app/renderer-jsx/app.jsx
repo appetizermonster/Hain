@@ -171,9 +171,15 @@ class AppContainer extends React.Component {
         const listContainerInner = ReactDOM.findDOMNode(
           _this.refs.listContainerInner
         );
+        const previewInner = ReactDOM.findDOMNode(
+          _this.refs.previewInner
+        );
 
+        // set height of main container and preview panel based on remaining available window space
         const windowHeight = _this.state.themeObj.window.height - queryWrapper.getBoundingClientRect().height - 38;
+
         listContainerInner.style.height = `${windowHeight}px`;
+        previewInner.style.height = `${windowHeight}px`;
       });
     });
     setInterval(this.processToast.bind(this), 200);
@@ -585,32 +591,29 @@ class AppContainer extends React.Component {
 
     const containerStyles = {
       overflowX: 'hidden',
-      transition: 'width 0.35s cubic-bezier(0.23, 1, 0.32, 1)',
       overflowY: 'auto',
-      width: '100%',
-      marginTop: '12px'
+      transition: 'width 0.35s cubic-bezier(0.23, 1, 0.32, 1)',
+      marginTop: '12px',
+      width: '100%'
     };
 
-    let previewBox = null;
-    if (selectedResult && selectedResult.preview) {
-      const previewStyle = {
-        float: 'left',
-        boxSizing: 'border-box',
-        overflowX: 'hidden',
-        overflowY: 'hidden',
-        padding: '10px',
-        paddingRight: '0'
-      };
+    const previewStyles = {
+      boxSizing: 'border-box',
+      overflowX: 'hidden',
+      overflowY: 'hidden',
+      paddingLeft: '10px',
+      marginTop: '12px',
+      width: 0
+    };
 
-      previewBox = (
-        <div style={previewStyle}>
-          <HTMLFrame
-            html={this.state.previewHtml}
-            sandbox="allow-forms allow-popups allow-same-origin allow-scripts"
-            style={{ width: '100%', height: '100%', border: '0' }}
-          />
-        </div>
-      );
+    // if we have preview content, modify display styles of the main container and preview container to make the preview panel visible
+    if (selectedResult && selectedResult.preview) {
+      containerStyles.marginTop = '0';
+      containerStyles.float = 'left';
+      containerStyles.width = '300px';
+
+      containerStyles.float = 'left';
+      previewStyles.width = `${this.state.themeObj.window.width - 300 - 24}px`;
     }
 
     return (
@@ -687,7 +690,14 @@ class AppContainer extends React.Component {
                 </SelectableList>
               </MuiThemeProvider>
             </div>
-            {previewBox}
+
+            <div ref="previewInner" style={previewStyles}>
+              <HTMLFrame
+                html={this.state.previewHtml}
+                sandbox="allow-forms allow-popups allow-same-origin allow-scripts"
+                style={{ width: '100%', height: '100%', border: '0' }}
+              />
+            </div>
           </div>
 
           <Notification
