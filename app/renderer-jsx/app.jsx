@@ -14,12 +14,14 @@ const ReactDOM = require('react-dom');
 const remote = require('electron').remote;
 const ipc = require('electron').ipcRenderer;
 
+const conf = require('../main/conf');
+
 const RpcChannel = require('../main/shared/rpc-channel');
 const rpc = RpcChannel.createWithIpcRenderer('#mainWindow', ipc);
 
 const textUtil = require('../main/shared/text-util');
 
-const { ThemeObjectDefault } = require('../main/shared/theme-object');
+const { ThemeObject, ThemeObjectDefault } = require('../main/shared/theme-object');
 
 const Ticket = require('./ticket');
 const searchTicket = new Ticket();
@@ -54,7 +56,7 @@ class AppContainer extends React.Component {
     this.state = {
       query: '',
       results: [],
-      themeObj: new ThemeObjectDefault('light').themeObj,
+      themeObj: new ThemeObjectDefault(conf.THEME_VARIANT_LIGHT).themeObj,
       selectionIndex: 0,
       toastMessage: '',
       toastOpen: false
@@ -170,10 +172,8 @@ class AppContainer extends React.Component {
           _this.refs.listContainerInner
         );
 
-        listContainerInner.style.height = `${_this.state.themeObj.window
-          .height -
-          queryWrapper.getBoundingClientRect().height -
-          38}px`;
+        const windowHeight = _this.state.themeObj.window.height - queryWrapper.getBoundingClientRect().height - 38;
+        listContainerInner.style.height = `${windowHeight}px`;
       });
     });
     setInterval(this.processToast.bind(this), 200);
@@ -478,7 +478,7 @@ class AppContainer extends React.Component {
       textField: {
         textColor: this.state.themeObj.search.text.color,
         focusColor: this.state.themeObj.separator.color,
-        backgroundColor: this.state.themeObj.search.background,
+        backgroundColor: ThemeObject.determineTransparentColor(this.state.themeObj, this.state.themeObj.search.background),
         borderColor: this.state.themeObj.separator.color
       }
     });

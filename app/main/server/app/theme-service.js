@@ -13,8 +13,8 @@ const {
   ThemeObjectThemer
 } = require('../../shared/theme-object');
 
-const defaultThemeLight = new ThemeObjectDefault('light');
-const defaultThemeDark = new ThemeObjectDefault('dark');
+const defaultThemeLight = new ThemeObjectDefault(conf.THEME_VARIANT_LIGHT);
+const defaultThemeDark = new ThemeObjectDefault(conf.THEME_VARIANT_DARK);
 
 class ThemeService {
   constructor(appService, themePref) {
@@ -157,15 +157,27 @@ class ThemeService {
   }
 
   getActiveThemeObj() {
+    let themeObj = defaultThemeLight;
+
     try {
-      const themeObj = this.userThemesObjs[
-        this.themePref.get('activeTheme') || defaultThemeLight.fullName
+      themeObj = this.userThemesObjs[
+        this.themePref.get('activeTheme')
       ];
 
-      return themeObj || defaultThemeLight;
-    } catch (err) {
-      return defaultThemeLight;
+    } catch (err) { }
+
+    // set transparency and vibrancy settings into the theme object
+    themeObj.themeObj.window.transparent = this.themePref.get('enableTransparency');
+    themeObj.themeObj.window.vibrancy = 'popover';
+
+    // set vibrancy based on theme variant
+    if (themeObj.variant === conf.THEME_VARIANT_LIGHT) {
+      themeObj.themeObj.window.vibrancy = 'light';
+    } else if (themeObj.variant === conf.THEME_VARIANT_DARK) {
+      themeObj.themeObj.window.vibrancy = 'dark';
     }
+
+    return themeObj;
   }
 
   applyTheme() {

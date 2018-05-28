@@ -1,5 +1,10 @@
 'use strict';
 
+const tinycolor = require('tinycolor2');
+
+const conf = require('../conf');
+
+
 const defaultThemeLight = {
   name: 'Hain Light',
   credit: 'dannya',
@@ -42,7 +47,7 @@ const defaultThemeLight = {
     backgroundSelected: ''
   },
   window: {
-    color: '#ffffff',
+    color: 'rgba(255, 255, 255, 0.8)',
     paddingHorizontal: 10,
     width: 560,
     height: 544,
@@ -104,7 +109,7 @@ const defaultThemeDark = {
     backgroundSelected: ''
   },
   window: {
-    color: '#000000',
+    color: 'rgba(0, 0, 0, 0.7)',
     paddingHorizontal: 10,
     width: 560,
     height: 544,
@@ -138,12 +143,12 @@ class ThemeObject {
       parseInt(this.themeObj.window.height, 10) ||
       defaultThemeLight.window.height;
 
-    // process color values
-    this.processColors();
+    // process color and font values
+    this.processThemeObj();
   }
 
   set id(id) {
-    this._themeId = id;
+    this._themeId = id.replace(' ', '_');
   }
 
   get id() {
@@ -164,6 +169,18 @@ class ThemeObject {
 
   get fullName() {
     return this._fullName;
+  }
+
+  set variant(variant) {
+    this._variant = variant;
+  }
+
+  get variant() {
+    if (!this._variant) {
+      this.calculateVariant();
+    }
+
+    return this._variant;
   }
 
   get valid() {
@@ -320,76 +337,66 @@ class ThemeObject {
     };
   }
 
-  static convertHexColor(hexStr, format = 'rgba') {
-    let hex;
-
-    // if provided, remove hash character from start of color string
-    if (hexStr[0] !== '#') {
-      hex = hexStr;
-    } else {
-      hex = hexStr.slice(1);
-    }
-
-    // if this is not a rgba hex color, do not continue and return original color string
-    if (hex.length !== 8) {
-      return hexStr;
-    }
-
-    // split to four channels
-    const c = hex.match(/.{2}/g);
-
-    // guard against invalid color split
-    if (c.length !== 4) {
-      return hexStr;
-    }
-
-    // function: to decimals (for RGB)
-    const d = function(v) {
-      return parseInt(v, 16);
-    };
-
-    // function: to percentage (for alpha), to 3 decimals
-    const p = function(v) {
-      return parseFloat(parseInt(parseInt(v, 16) / 255 * 1000) / 1000);
-    };
-
-    // check format - if it's argb, pop the alpha value from the end and move it to front
-    if (format === 'argb') {
-      c.push(c.shift());
-    }
-
-    // convert array into rgba values
-    const a = p(c[3]);
-    const cSlice = c.slice(0, 3);
-    const rgb = [];
-    for (const i in cSlice) {
-      rgb.push(d(cSlice[i]));
-    }
-
-    // return color in rgba() format
-    return `rgba(${rgb.join(', ')}, ${a})`;
-  }
-
   static convertFont(fontStr) {
     // until theme font support is implemented, convert all font references to Hain-supported "Roboto"
     return '"Roboto", sans-serif';
   }
 
-  processColors() {
+  static determineTransparentColor(themeObj, color) {
+    console.log(themeObj);
+
+    // return color to be set if:
+    // * window transparency is not enabled, or
+    // * window transparency is enabled and the color has transparency
+    const colorObj = tinycolor(color);
+
+    if (colorObj.isValid() &&
+        (
+          (themeObj.window.transparent !== true) ||
+          ((themeObj.window.transparent === true) && (colorObj.getAlpha() < 1))
+        )
+    ) {
+
+      // if the window is not transparent but the color is, convert the color to fully opaque
+      if ((themeObj.window.transparent !== true) && (colorObj.getAlpha() < 1)) {
+        return colorObj.setAlpha(1).toRgbString();
+      } else {
+        return color;
+      }
+    }
+
+    return null;
+  }
+
+  calculateVariant() {
+    // attempt to calculate variant from theme-defined window color
+    const colorObj = tinycolor(this.themeObj.window.color);
+
+    if (colorObj.isValid()) {
+      this._variant = colorObj.isDark() ? conf.THEME_VARIANT_DARK : conf.THEME_VARIANT_LIGHT;
+    } else {
+      this._variant = conf.THEME_VARIANT_LIGHT;
+    }
+  }
+
+  processThemeObj() {
     function recurse(initial) {
       for (const prop in initial) {
         if ({}.hasOwnProperty.call(initial, prop)) {
           if (typeof initial[prop] === 'object') {
             recurse(initial[prop]);
           } else {
-            if (initial[prop][0] === '#') {
-              if (initial[prop].length === 9) {
-                initial[prop] = ThemeObject.convertHexColor(initial[prop]);
-              }
-            }
-
             if (prop === 'font') {
+              // attempt to parse a font value
               initial[prop] = ThemeObject.convertFont(initial[prop]);
+
+            } else {
+              // attempt to parse a color value
+              const colorObj = tinycolor(initial[prop]);
+
+              if (colorObj.isValid()) {
+                initial[prop] = tinycolor(initial[prop]).toRgbString();
+              }
             }
           }
         }
@@ -407,6 +414,7 @@ class ThemeObjectDefault extends ThemeObject {
     let themeObj;
     if (themeVariant === 'dark') {
       themeObj = defaultThemeDark;
+
     } else {
       themeObj = defaultThemeLight;
     }
@@ -417,6 +425,7 @@ class ThemeObjectDefault extends ThemeObject {
     this.id = ThemeObject.stripThemeName(themeObj.name);
     this.name = themeObj.name;
     this.fullName = `${themeObj.name} (by ${themeObj.credit})`;
+    this.variant = themeVariant;
   }
 }
 
@@ -536,6 +545,7 @@ class ThemeObjectThemer extends ThemeObject {
 }
 
 module.exports = {
+  ThemeObject,
   ThemeObjectDefault,
   ThemeObjectAlfredJSON,
   ThemeObjectAlfredXML,

@@ -74,6 +74,7 @@
     "simple-lru-cache": "0.0.2",
     "tar": "2.2.1",
     "tarball-extract": "0.0.3",
+    "tinycolor2": "^1.4.1",
     "tunnel": "0.0.4",
     "twitter-text": "^1.13.4",
     "uuid": "2.0.2",

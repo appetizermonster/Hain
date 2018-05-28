@@ -4,6 +4,10 @@ const electron = require('electron');
 const shell = electron.shell;
 const BrowserWindow = electron.BrowserWindow;
 
+const conf = require('../../../conf');
+
+const { ThemeObject } = require('../../../shared/theme-object');
+
 const platformUtil = require('../../../../native/platform-util');
 const windowUtil = require('./window-util');
 const RpcChannel = require('../../../shared/rpc-channel');
@@ -31,6 +35,8 @@ module.exports = class MainWindow {
   }
 
   createWindow(onComplete) {
+    const activeThemeObj = this.themeService.getActiveThemeObj();
+
     // set initial window options
     let options = {
       alwaysOnTop: true,
@@ -42,24 +48,17 @@ module.exports = class MainWindow {
       maximizable: false,
       moveable: false,
       resizable: false,
-      skipTaskbar: true
+      skipTaskbar: true,
+      transparent: activeThemeObj.themeObj.window.transparent
     };
 
-    // set vibrancy (background window blur) for supported platforms
-    const isDarwin = process.platform === 'darwin';
-    if (isDarwin) {
+    // if transparency is enabled, also set "vibrancy" (background window blur) for supported platforms
+    if (activeThemeObj.themeObj.window.transparent && conf.SUPPORTED_PLATFORMS_TRANSPARENCY.includes(process.platform)) {
       // all of these options are needed to enable vibrancy on MacOS
       options = {
         ...options,
         titleBarStyle: 'hidden',
-        vibrancy: 'popover',
-        transparent: true
-      };
-    } else {
-      // if not on MacOS, set window transparency based on user config value (default: false)
-      options = {
-        ...options,
-        transparent: this.themePref.get('enableTransparency') || false
+        vibrancy: activeThemeObj.themeObj.window.vibrancy
       };
     }
 
@@ -197,9 +196,11 @@ module.exports = class MainWindow {
     );
 
     // set background color?
-    if (typeof themeObj.themeObj.window.color === 'string') {
+    const windowColor = ThemeObject.determineTransparentColor(themeObj.themeObj, themeObj.themeObj.window.color);
+
+    if (windowColor) {
       this.browserWindow.webContents.insertCSS(
-        `html { background: ${themeObj.themeObj.window.color} !important; }`
+        `html { background: ${windowColor} !important; }`
       );
     }
 
