@@ -33,8 +33,10 @@ themePrefSchema.properties.activeTheme.enum = themePrefSchema.properties.activeT
 // set "enable transparency" defaults based on platform
 if (!conf.SUPPORTED_PLATFORMS_TRANSPARENCY.includes(process.platform)) {
   // if we are not on a known supported platform, set setting and UI description to more conservative (off by default) values
-  themePrefSchema.properties.enableTransparency.default = themePrefSchema.properties.enableTransparency.default_win;
-  themePrefSchema.properties.enableTransparency.title = themePrefSchema.properties.enableTransparency.title_win;
+  themePrefSchema.properties.enableTransparency.default =
+    themePrefSchema.properties.enableTransparency.default_win;
+  themePrefSchema.properties.enableTransparency.title =
+    themePrefSchema.properties.enableTransparency.title_win;
 }
 
 // prepend user themes location to field help message

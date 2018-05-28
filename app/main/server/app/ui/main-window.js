@@ -53,7 +53,10 @@ module.exports = class MainWindow {
     };
 
     // if transparency is enabled, also set "vibrancy" (background window blur) for supported platforms
-    if (activeThemeObj.themeObj.window.transparent && conf.SUPPORTED_PLATFORMS_TRANSPARENCY.includes(process.platform)) {
+    if (
+      activeThemeObj.themeObj.window.transparent &&
+      conf.SUPPORTED_PLATFORMS_TRANSPARENCY.includes(process.platform)
+    ) {
       // all of these options are needed to enable vibrancy on MacOS
       options = {
         ...options,
@@ -196,7 +199,10 @@ module.exports = class MainWindow {
     );
 
     // set background color?
-    const windowColor = ThemeObject.determineTransparentColor(themeObj.themeObj, themeObj.themeObj.window.color);
+    const windowColor = ThemeObject.determineTransparentColor(
+      themeObj.themeObj,
+      themeObj.themeObj.window.color
+    );
 
     if (windowColor) {
       this.browserWindow.webContents.insertCSS(

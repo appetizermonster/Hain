@@ -21,7 +21,10 @@ const rpc = RpcChannel.createWithIpcRenderer('#mainWindow', ipc);
 
 const textUtil = require('../main/shared/text-util');
 
-const { ThemeObject, ThemeObjectDefault } = require('../main/shared/theme-object');
+const {
+  ThemeObject,
+  ThemeObjectDefault
+} = require('../main/shared/theme-object');
 
 const Ticket = require('./ticket');
 const searchTicket = new Ticket();
@@ -171,12 +174,13 @@ class AppContainer extends React.Component {
         const listContainerInner = ReactDOM.findDOMNode(
           _this.refs.listContainerInner
         );
-        const previewInner = ReactDOM.findDOMNode(
-          _this.refs.previewInner
-        );
+        const previewInner = ReactDOM.findDOMNode(_this.refs.previewInner);
 
         // set height of main container and preview panel based on remaining available window space
-        const windowHeight = _this.state.themeObj.window.height - queryWrapper.getBoundingClientRect().height - 38;
+        const windowHeight =
+          _this.state.themeObj.window.height -
+          queryWrapper.getBoundingClientRect().height -
+          38;
 
         listContainerInner.style.height = `${windowHeight}px`;
         previewInner.style.height = `${windowHeight}px`;
@@ -484,7 +488,10 @@ class AppContainer extends React.Component {
       textField: {
         textColor: this.state.themeObj.search.text.color,
         focusColor: this.state.themeObj.separator.color,
-        backgroundColor: ThemeObject.determineTransparentColor(this.state.themeObj, this.state.themeObj.search.background),
+        backgroundColor: ThemeObject.determineTransparentColor(
+          this.state.themeObj,
+          this.state.themeObj.search.background
+        ),
         borderColor: this.state.themeObj.separator.color
       }
     });

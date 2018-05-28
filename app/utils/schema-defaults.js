@@ -21,9 +21,8 @@ function defaults(schema) {
     }
 
     return obj;
-  }
-  else if (type === 'boolean') {
-    return (schema.default !== undefined) ? schema.default : null;
+  } else if (type === 'boolean') {
+    return schema.default !== undefined ? schema.default : null;
   }
 
   return null;

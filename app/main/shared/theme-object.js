@@ -4,7 +4,6 @@ const tinycolor = require('tinycolor2');
 
 const conf = require('../conf');
 
-
 const defaultThemeLight = {
   name: 'Hain Light',
   credit: 'dannya',
@@ -348,19 +347,16 @@ class ThemeObject {
     // * window transparency is enabled and the color has transparency
     const colorObj = tinycolor(color);
 
-    if (colorObj.isValid() &&
-        (
-          (themeObj.window.transparent !== true) ||
-          ((themeObj.window.transparent === true) && (colorObj.getAlpha() < 1))
-        )
+    if (
+      colorObj.isValid() &&
+      (themeObj.window.transparent !== true ||
+        (themeObj.window.transparent === true && colorObj.getAlpha() < 1))
     ) {
-
       // if the window is not transparent but the color is, convert the color to fully opaque
-      if ((themeObj.window.transparent !== true) && (colorObj.getAlpha() < 1)) {
+      if (themeObj.window.transparent !== true && colorObj.getAlpha() < 1) {
         return colorObj.setAlpha(1).toRgbString();
-      } else {
-        return color;
       }
+      return color;
     }
 
     return null;
@@ -371,7 +367,9 @@ class ThemeObject {
     const colorObj = tinycolor(this.themeObj.window.color);
 
     if (colorObj.isValid()) {
-      this._variant = colorObj.isDark() ? conf.THEME_VARIANT_DARK : conf.THEME_VARIANT_LIGHT;
+      this._variant = colorObj.isDark()
+        ? conf.THEME_VARIANT_DARK
+        : conf.THEME_VARIANT_LIGHT;
     } else {
       this._variant = conf.THEME_VARIANT_LIGHT;
     }
@@ -383,18 +381,15 @@ class ThemeObject {
         if ({}.hasOwnProperty.call(initial, prop)) {
           if (typeof initial[prop] === 'object') {
             recurse(initial[prop]);
+          } else if (prop === 'font') {
+            // attempt to parse a font value
+            initial[prop] = ThemeObject.convertFont(initial[prop]);
           } else {
-            if (prop === 'font') {
-              // attempt to parse a font value
-              initial[prop] = ThemeObject.convertFont(initial[prop]);
+            // attempt to parse a color value
+            const colorObj = tinycolor(initial[prop]);
 
-            } else {
-              // attempt to parse a color value
-              const colorObj = tinycolor(initial[prop]);
-
-              if (colorObj.isValid()) {
-                initial[prop] = tinycolor(initial[prop]).toRgbString();
-              }
+            if (colorObj.isValid()) {
+              initial[prop] = tinycolor(initial[prop]).toRgbString();
             }
           }
         }
@@ -412,7 +407,6 @@ class ThemeObjectDefault extends ThemeObject {
     let themeObj;
     if (themeVariant === 'dark') {
       themeObj = defaultThemeDark;
-
     } else {
       themeObj = defaultThemeLight;
     }

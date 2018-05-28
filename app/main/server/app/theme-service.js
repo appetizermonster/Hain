@@ -160,14 +160,13 @@ class ThemeService {
     let themeObj = defaultThemeLight;
 
     try {
-      themeObj = this.userThemesObjs[
-        this.themePref.get('activeTheme')
-      ];
-
-    } catch (err) { }
+      themeObj = this.userThemesObjs[this.themePref.get('activeTheme')];
+    } catch (err) {}
 
     // set transparency and vibrancy settings into the theme object
-    themeObj.themeObj.window.transparent = this.themePref.get('enableTransparency');
+    themeObj.themeObj.window.transparent = this.themePref.get(
+      'enableTransparency'
+    );
     themeObj.themeObj.window.vibrancy = 'popover';
 
     // set vibrancy based on theme variant
