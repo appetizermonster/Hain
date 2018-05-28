@@ -3,8 +3,10 @@
   "properties": {
     "enableTransparency": {
       "type": "boolean",
-      "title": "Enable transparency (may cause flickering, requires restart)",
-      "default": false
+      "title": "Enable transparency (requires restart)",
+      "title_win": "Enable transparency (may cause flickering, requires restart)",
+      "default": true,
+      "default_win": false
     },
     "activeTheme": {
       "title": "Current theme",
