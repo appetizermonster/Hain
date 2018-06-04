@@ -357,19 +357,17 @@ class ThemeObject {
         if (conf.SUPPORTED_PLATFORMS_VIBRANCY.includes(process.platform)) {
           // vibrancy (aka background blurring) is supported, so return color unchanged
           return color;
-
-        } else {
-          // vibrancy (aka background blurring) is not supported, so reduce transparency of color
-          return colorObj.setAlpha((themeObj.window.vibrancy === conf.THEME_VIBRANCY_LIGHT) ? 0.85 : 0.75).toRgbString();
         }
+        // vibrancy (aka background blurring) is not supported, so reduce transparency of color
+        return colorObj
+          .setAlpha(
+            themeObj.window.vibrancy === conf.THEME_VIBRANCY_LIGHT ? 0.85 : 0.75
+          )
+          .toRgbString();
       }
-
-    } else {
-      // window is not transparent...
-      if (colorObj.getAlpha() < 1) {
-        // window is not transparent but the color is, convert the color to fully opaque
-        return colorObj.setAlpha(1).toRgbString();
-      }
+    } else if (colorObj.getAlpha() < 1) {
+      // window is not transparent but the color is, convert the color to fully opaque
+      return colorObj.setAlpha(1).toRgbString();
     }
 
     return null;

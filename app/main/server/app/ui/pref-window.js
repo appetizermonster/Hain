@@ -53,17 +53,21 @@ module.exports = class PrefWindow {
     this._createAndShow(url);
   }
   _changeRequiresRestart(themePreferencesOnOpen, themePreferencesOnClose) {
-    const appTransparencyChanged = (themePreferencesOnOpen.enableTransparency !== themePreferencesOnClose.enableTransparency);
+    const appTransparencyChanged =
+      themePreferencesOnOpen.enableTransparency !==
+      themePreferencesOnClose.enableTransparency;
 
     let vibrancyChanged = false;
     try {
-      vibrancyChanged = (
+      vibrancyChanged =
         conf.SUPPORTED_PLATFORMS_VIBRANCY.includes(process.platform) &&
-        (this.themeService.getThemeObj(themePreferencesOnOpen.activeTheme).themeObj.window.vibrancy !== this.themeService.getThemeObj(themePreferencesOnClose.activeTheme).themeObj.window.vibrancy)
-      );
+        this.themeService.getThemeObj(themePreferencesOnOpen.activeTheme)
+          .themeObj.window.vibrancy !==
+          this.themeService.getThemeObj(themePreferencesOnClose.activeTheme)
+            .themeObj.window.vibrancy;
     } catch (e) {}
 
-    return (appTransparencyChanged || vibrancyChanged);
+    return appTransparencyChanged || vibrancyChanged;
   }
   _createAndShow(url) {
     const themePreferencesOnOpen = this.prefManager.getPreferences(
@@ -92,7 +96,12 @@ module.exports = class PrefWindow {
         conf.THEME_PREF_ID
       ).model;
 
-      if (!this._changeRequiresRestart(themePreferencesOnOpen, themePreferencesOnClose)) {
+      if (
+        !this._changeRequiresRestart(
+          themePreferencesOnOpen,
+          themePreferencesOnClose
+        )
+      ) {
         // ...change does not require a restart, save preferences and close
         this.prefManager.commitPreferences();
         this.browserWindow = null;
@@ -125,8 +134,10 @@ module.exports = class PrefWindow {
         const modifiedThemePreferences = this.prefManager.getPreferences(
           conf.THEME_PREF_ID
         );
-        modifiedThemePreferences.model.enableTransparency = themePreferencesOnOpen.enableTransparency;
-        modifiedThemePreferences.model.activeTheme = themePreferencesOnOpen.activeTheme;
+        modifiedThemePreferences.model.enableTransparency =
+          themePreferencesOnOpen.enableTransparency;
+        modifiedThemePreferences.model.activeTheme =
+          themePreferencesOnOpen.activeTheme;
 
         this.browserWindow = null;
         return;
