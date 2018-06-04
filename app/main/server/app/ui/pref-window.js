@@ -125,12 +125,10 @@ module.exports = class PrefWindow {
         const modifiedThemePreferences = this.prefManager.getPreferences(
           conf.THEME_PREF_ID
         );
-        modifiedThemePreferences.model.enableTransparency = !modifiedThemePreferences
-          .model.enableTransparency;
+        modifiedThemePreferences.model.enableTransparency = themePreferencesOnOpen.enableTransparency;
+        modifiedThemePreferences.model.activeTheme = themePreferencesOnOpen.activeTheme;
 
-        this.prefManager.commitPreferences();
         this.browserWindow = null;
-
         return;
       } else if (clickedButton === 2) {
         // cancel change and do not close pref window
