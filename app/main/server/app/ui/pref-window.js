@@ -12,11 +12,12 @@ const RpcChannel = require('../../../shared/rpc-channel');
 const ipc = electron.ipcMain;
 
 module.exports = class PrefWindow {
-  constructor(appService, prefManager) {
+  constructor(appService, prefManager, themeService) {
     this.browserWindow = null;
 
     this.appService = appService;
     this.prefManager = prefManager;
+    this.themeService = themeService;
 
     this.rpc = RpcChannel.create(
       '#prefWindow',
@@ -51,6 +52,19 @@ module.exports = class PrefWindow {
     }
     this._createAndShow(url);
   }
+  _changeRequiresRestart(themePreferencesOnOpen, themePreferencesOnClose) {
+    const appTransparencyChanged = (themePreferencesOnOpen.enableTransparency !== themePreferencesOnClose.enableTransparency);
+
+    let vibrancyChanged = false;
+    try {
+      vibrancyChanged = (
+        conf.SUPPORTED_PLATFORMS_VIBRANCY.includes(process.platform) &&
+        (this.themeService.getThemeObj(themePreferencesOnOpen.activeTheme).themeObj.window.vibrancy !== this.themeService.getThemeObj(themePreferencesOnClose.activeTheme).themeObj.window.vibrancy)
+      );
+    } catch (e) {}
+
+    return (appTransparencyChanged || vibrancyChanged);
+  }
   _createAndShow(url) {
     const themePreferencesOnOpen = this.prefManager.getPreferences(
       conf.THEME_PREF_ID
@@ -73,23 +87,20 @@ module.exports = class PrefWindow {
         return;
       }
 
-      // check for changed "enable transparency" setting...
+      // check for changed settings that require a restart...
       const themePreferencesOnClose = this.prefManager.getPreferences(
         conf.THEME_PREF_ID
       ).model;
 
-      if (
-        themePreferencesOnOpen.enableTransparency ===
-        themePreferencesOnClose.enableTransparency
-      ) {
-        // ..."enable transparency" setting has not changed
+      if (!this._changeRequiresRestart(themePreferencesOnOpen, themePreferencesOnClose)) {
+        // ...change does not require a restart, save preferences and close
         this.prefManager.commitPreferences();
         this.browserWindow = null;
 
         return;
       }
 
-      // ..."enable transparency" setting has changed - ask user if they would like to restart app, or cancel change
+      // ...change requires a restart - ask user if they would like to restart app, or cancel change
       const clickedButton = dialog.showMessageBox({
         type: 'question',
         title: 'Change transparency setting and restart?',

@@ -157,23 +157,27 @@ class ThemeService {
   }
 
   getActiveThemeObj() {
+    return this.getThemeObj(this.themePref.get('activeTheme'));
+  }
+
+  getThemeObj(themeName) {
     let themeObj = defaultThemeLight;
 
     try {
-      themeObj = this.userThemesObjs[this.themePref.get('activeTheme')];
+      themeObj = this.userThemesObjs[themeName];
     } catch (err) {}
 
     // set transparency and vibrancy settings into the theme object
     themeObj.themeObj.window.transparent = this.themePref.get(
       'enableTransparency'
     );
-    themeObj.themeObj.window.vibrancy = 'popover';
+    themeObj.themeObj.window.vibrancy = conf.THEME_VIBRANCY_POPOVER;
 
     // set vibrancy based on theme variant
     if (themeObj.variant === conf.THEME_VARIANT_LIGHT) {
-      themeObj.themeObj.window.vibrancy = 'light';
+      themeObj.themeObj.window.vibrancy = conf.THEME_VIBRANCY_LIGHT;
     } else if (themeObj.variant === conf.THEME_VARIANT_DARK) {
-      themeObj.themeObj.window.vibrancy = 'dark';
+      themeObj.themeObj.window.vibrancy = conf.THEME_VIBRANCY_DARK;
     }
 
     return themeObj;

@@ -46,7 +46,7 @@ const defaultThemeLight = {
     backgroundSelected: ''
   },
   window: {
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: 'rgba(255, 255, 255, 0.2)',
     paddingHorizontal: 10,
     width: conf.DEFAULT_WINDOW_WIDTH,
     height: conf.DEFAULT_WINDOW_HEIGHT,
@@ -108,7 +108,7 @@ const defaultThemeDark = {
     backgroundSelected: ''
   },
   window: {
-    color: 'rgba(0, 0, 0, 0.7)',
+    color: 'rgba(0, 0, 0, 0.4)',
     paddingHorizontal: 10,
     width: conf.DEFAULT_WINDOW_WIDTH,
     height: conf.DEFAULT_WINDOW_HEIGHT,
@@ -347,16 +347,29 @@ class ThemeObject {
     // * window transparency is enabled and the color has transparency
     const colorObj = tinycolor(color);
 
-    if (
-      colorObj.isValid() &&
-      (themeObj.window.transparent !== true ||
-        (themeObj.window.transparent === true && colorObj.getAlpha() < 1))
-    ) {
-      // if the window is not transparent but the color is, convert the color to fully opaque
-      if (themeObj.window.transparent !== true && colorObj.getAlpha() < 1) {
+    if (!colorObj.isValid()) {
+      return color;
+    }
+
+    if (themeObj.window.transparent === true) {
+      // window is transparent...
+      if (colorObj.getAlpha() < 1) {
+        if (conf.SUPPORTED_PLATFORMS_VIBRANCY.includes(process.platform)) {
+          // vibrancy (aka background blurring) is supported, so return color unchanged
+          return color;
+
+        } else {
+          // vibrancy (aka background blurring) is not supported, so reduce transparency of color
+          return colorObj.setAlpha((themeObj.window.vibrancy === conf.THEME_VIBRANCY_LIGHT) ? 0.85 : 0.75).toRgbString();
+        }
+      }
+
+    } else {
+      // window is not transparent...
+      if (colorObj.getAlpha() < 1) {
+        // window is not transparent but the color is, convert the color to fully opaque
         return colorObj.setAlpha(1).toRgbString();
       }
-      return color;
     }
 
     return null;

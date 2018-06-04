@@ -55,7 +55,7 @@ module.exports = class MainWindow {
     // if transparency is enabled, also set "vibrancy" (background window blur) for supported platforms
     if (
       activeThemeObj.themeObj.window.transparent &&
-      conf.SUPPORTED_PLATFORMS_TRANSPARENCY.includes(process.platform)
+      conf.SUPPORTED_PLATFORMS_VIBRANCY.includes(process.platform)
     ) {
       // all of these options are needed to enable vibrancy on MacOS
       options = {

@@ -4,9 +4,9 @@
     "enableTransparency": {
       "type": "boolean",
       "title": "Enable transparency (requires restart)",
-      "title_win": "Enable transparency (may cause flickering, requires restart)",
+      "title_unsupported": "Enable transparency (may cause flickering, requires restart)",
       "default": true,
-      "default_win": false
+      "default_unsupported": false
     },
     "activeTheme": {
       "title": "Current theme",
