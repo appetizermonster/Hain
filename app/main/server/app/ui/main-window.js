@@ -201,7 +201,8 @@ module.exports = class MainWindow {
     // set background color?
     const windowColor = ThemeObject.determineTransparentColor(
       themeObj.themeObj,
-      themeObj.themeObj.window.color
+      themeObj.themeObj.window.color,
+      true
     );
 
     if (windowColor) {

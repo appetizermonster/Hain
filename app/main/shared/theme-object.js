@@ -341,7 +341,7 @@ class ThemeObject {
     return '"Roboto", sans-serif';
   }
 
-  static determineTransparentColor(themeObj, color) {
+  static determineTransparentColor(themeObj, color, alwaysReturnColor) {
     // return color to be set if:
     // * window transparency is not enabled, or
     // * window transparency is enabled and the color has transparency
@@ -370,6 +370,9 @@ class ThemeObject {
       return colorObj.setAlpha(1).toRgbString();
     }
 
+    if (alwaysReturnColor === true) {
+      return color;
+    }
     return null;
   }
 
