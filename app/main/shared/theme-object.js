@@ -22,7 +22,7 @@ const defaultThemeLight = {
       font: '',
       color: ''
     },
-    backgroundSelected: '#DDDDDD',
+    backgroundSelected: 'rgba(0, 0, 0, 0.2)',
     text: {
       size: 18,
       colorSelected: '#272727',
@@ -84,7 +84,7 @@ const defaultThemeDark = {
       font: '',
       color: ''
     },
-    backgroundSelected: '#222222',
+    backgroundSelected: 'rgba(255, 255, 255, 0.2)',
     text: {
       size: 18,
       colorSelected: '#f3f3f3',

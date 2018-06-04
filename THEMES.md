@@ -88,7 +88,7 @@ Here is the internal Alfred-compatible JSON theme format representing the defaul
       font: '',     // not implemented
       color: ''     // not implemented
     },
-    backgroundSelected: '#DDDDDD',
+    backgroundSelected: 'rgba(0, 0, 0, 0.2)',
     text: {
       size: 18,
       colorSelected: '#272727',
@@ -114,7 +114,7 @@ Here is the internal Alfred-compatible JSON theme format representing the defaul
   window: {
     color: '#ffffff',
     paddingHorizontal: 10,     // not implemented
-    width: 560,
+    width: 800,
     height: 544,
     borderPadding: 0,     // not implemented
     borderColor: '',     // not implemented
