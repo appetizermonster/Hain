@@ -14,7 +14,7 @@
 
     "shortcut": {
       "type": "string",
-      "title": "Open-Close Toggle Shortcut",
+      "title": "Open/Close Toggle Shortcut",
       "description": "<a href='http://electron.atom.io/docs/v0.37.7/api/accelerator/'>Available shortcut key definitions</a>.",
       "default": "alt+space",
       "minLength": 1,
