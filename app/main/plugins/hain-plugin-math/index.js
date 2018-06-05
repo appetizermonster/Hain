@@ -50,7 +50,10 @@ module.exports = (context) => {
 
         // replace European-style decimal separators with UK-style decimal separators as required by the MathJS library:
         // http://mathjs.org/examples/browser/custom_separators.html.html
-        query = query.replace(new RegExp(DECIMAL_SEPARATOR_EUROPE, 'g'), DECIMAL_SEPARATOR_UK);
+        query = query.replace(
+          new RegExp(DECIMAL_SEPARATOR_EUROPE, 'g'),
+          DECIMAL_SEPARATOR_UK
+        );
       }
 
       // calculate value by passing the query into MathJS
@@ -66,8 +69,11 @@ module.exports = (context) => {
 
         // if the input mode is the non-standard European-style, take the UK-style output of MathJS and transform it
         // back into the European-style that the user expects
-        if ((inputMode === DECIMAL_SEPARATOR_EUROPE) && ansString.includes('.')) {
-          ansString = ansString.replace(new RegExp(`\\${DECIMAL_SEPARATOR_UK}`, 'g'), DECIMAL_SEPARATOR_EUROPE);
+        if (inputMode === DECIMAL_SEPARATOR_EUROPE && ansString.includes('.')) {
+          ansString = ansString.replace(
+            new RegExp(`\\${DECIMAL_SEPARATOR_UK}`, 'g'),
+            DECIMAL_SEPARATOR_EUROPE
+          );
         }
 
         if (isResultMeaningful || showRedundantResult) return ansString;
