@@ -2,14 +2,16 @@
 
 const electron = require('electron');
 
-function centerWindowOnSelectedScreen(window, openOnActiveDisplay) {
+function getDisplay(openOnDisplay) {
   const screen = electron.screen;
 
-  let selectedDisplay = screen.getPrimaryDisplay();
-  const displays = screen.getAllDisplays();
-  const cursorPos = screen.getCursorScreenPoint();
+  let selectedDisplay;
 
-  if (openOnActiveDisplay) {
+  if (openOnDisplay === 'active') {
+    // determine the active display as the one with the mouse cursor inside
+    const displays = screen.getAllDisplays();
+    const cursorPos = screen.getCursorScreenPoint();
+
     for (const display of displays) {
       const bounds = display.bounds;
       const [left, right, top, bottom] = [
@@ -24,19 +26,49 @@ function centerWindowOnSelectedScreen(window, openOnActiveDisplay) {
       selectedDisplay = display;
       break;
     }
+
+  } else if (openOnDisplay) {
+    // specified screen ID
+    const displays = screen.getAllDisplays();
+
+    // TODO: implement
+    selectedDisplay = screen.getPrimaryDisplay();
+
+  } else {
+    // screen ID not set, so use primary display
+    selectedDisplay = screen.getPrimaryDisplay();
   }
 
-  const windowSize = window.getSize();
+  return selectedDisplay;
+}
+
+function positionWindowOnScreen(window, position, openOnDisplay) {
+  const selectedDisplay = getDisplay(openOnDisplay);
+
+  window.setPosition(Math.round(position[0]), Math.round(position[1]));
+}
+
+function centerWindowOnScreen(window, openOnDisplay) {
+  const selectedDisplay = getDisplay(openOnDisplay);
   const displayBounds = selectedDisplay.bounds;
 
-  const centerPos = [
+  // calculate position in center of window
+  const position = [
     displayBounds.x + displayBounds.width * 0.5,
     displayBounds.y + displayBounds.height * 0.5
   ];
-  centerPos[0] -= windowSize[0] * 0.5; // x
-  centerPos[1] -= windowSize[1] * 0.5; // y
 
-  window.setPosition(Math.round(centerPos[0]), Math.round(centerPos[1]));
+  // take current window size into account when determining screen position
+  const windowSize = window.getSize();
+
+  position[0] -= windowSize[0] * 0.5;
+  position[1] -= windowSize[1] * 0.5;
+
+  // initiate window move
+  positionWindowOnScreen(window, position, openOnDisplay);
 }
 
-module.exports = { centerWindowOnSelectedScreen };
+module.exports = {
+  positionWindowOnScreen,
+  centerWindowOnScreen
+};

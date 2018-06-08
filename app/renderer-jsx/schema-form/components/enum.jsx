@@ -28,7 +28,15 @@ class EnumComponent extends React.Component {
     }
 
     for (const itemData of schema.enum) {
-      const item = <MenuItem primaryText={itemData} value={itemData} />;
+      let itemValue = itemData;
+      let itemText = itemData;
+
+      if (typeof itemData === 'object') {
+        itemValue = itemData[0];
+        itemText = itemData[1];
+      }
+
+      const item = <MenuItem primaryText={itemText} value={itemValue} />;
       items.push(item);
     }
 

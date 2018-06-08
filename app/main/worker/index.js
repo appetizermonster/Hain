@@ -11,6 +11,7 @@ const rpc = require('./rpc');
 
 // Create local copies of app-pref and theme-pref objects
 const appPrefCopy = new PreferencesObject(null, 'hain', {});
+const windowPrefCopy = new PreferencesObject(null, 'hain-window', {});
 const themePrefCopy = new PreferencesObject(null, 'hain-theme', {});
 
 const workerContext = lo_assign(
@@ -103,6 +104,11 @@ rpc.define('commitPreferences', () => {
 rpc.define('updateAppPreferences', (payload) => {
   const { model } = payload;
   appPrefCopy.update(model);
+});
+
+rpc.define('updateWindowPreferences', (payload) => {
+  const { model } = payload;
+  windowPrefCopy.update(model);
 });
 
 rpc.define('updateThemePreferences', (payload) => {

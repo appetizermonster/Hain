@@ -38,7 +38,7 @@ class ArrayComponent extends React.Component {
 
     let title = schema.title || name;
     if (title) {
-      title = <h4>{title}</h4>;
+      title = <h2 style={{ fontWeight: '400' }}>{title}</h2>;
     }
 
     const description = utils.wrapDescription(schema.description);

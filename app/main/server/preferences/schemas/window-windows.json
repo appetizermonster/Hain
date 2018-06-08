@@ -1,0 +1,77 @@
+{
+  "type": "object",
+  "properties": {
+    "windowDraggable": {
+      "type": "boolean",
+      "title": "Draggable window",
+      "default": true
+    },
+    "rememberWindowPosition": {
+      "type": "boolean",
+      "title": "Automatically remember window position",
+      "default": false
+    },
+
+    "position": {
+      "type": "object",
+      "title": "Position",
+      "properties": {
+        "positionWindow": {
+          "type": "string",
+          "title": "Position mode",
+          "default": "center",
+          "enum" : [
+            [
+              "center",
+              "Center window on screen"
+            ],
+            [
+              "specified",
+              "Set window to specific screen position"
+            ]
+          ]
+        },
+
+        "posX": {
+          "condition": ".position.positionWindow=='specified'",
+          "type": "integer",
+          "title": "X position"
+        },
+        "posY": {
+          "condition": ".position.positionWindow=='specified'",
+          "type": "integer",
+          "title": "Y position"
+        }
+      }
+    },
+
+    "display": {
+      "type": "object",
+      "title": "Display",
+      "properties": {
+        "openOnDisplay": {
+          "type": "string",
+          "title": "Open on which display?",
+          "default": "active",
+          "enum" : [
+            [
+              "active",
+              "Open on the currently active display"
+            ],
+            [
+              "specified",
+              "Open on specific display"
+            ]
+          ]
+        },
+
+        "openOnSpecificDisplay": {
+          "condition": ".display.openOnDisplay=='specified'",
+          "type": "string",
+          "title": "Open on specific display",
+          "enum" : []
+        }
+      }
+    }
+  }
+}

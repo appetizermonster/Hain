@@ -6,11 +6,6 @@
       "title": "Clear query after window has closed",
       "default": true
     },
-    "openOnActiveDisplay": {
-      "type": "boolean",
-      "title": "Open window on the currently active display",
-      "default": true
-    },
 
     "shortcut": {
       "type": "string",

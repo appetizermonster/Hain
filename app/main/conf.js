@@ -20,7 +20,10 @@ const MAIN_PLUGIN_REPO = path.resolve(`${HAIN_USER_PATH}/plugins`);
 const DEV_PLUGIN_REPO = path.resolve(`${HAIN_USER_PATH}/devplugins`);
 const THEME_REPO = path.resolve(`${HAIN_USER_PATH}/themes`);
 
-const APP_PREF_ID = 'Hain';
+const APP_NAME = 'Hain';
+
+const APP_PREF_ID = 'General';
+const WINDOW_PREF_ID = 'Window';
 const THEME_PREF_ID = 'Themes';
 
 const PREF_GROUP_APPLICATION = 'Application';
@@ -58,7 +61,9 @@ module.exports = {
   MAIN_PLUGIN_REPO,
   DEV_PLUGIN_REPO,
   THEME_REPO,
+  APP_NAME,
   APP_PREF_ID,
+  WINDOW_PREF_ID,
   THEME_PREF_ID,
   PREF_GROUP_APPLICATION,
   PREF_GROUP_PLUGINS,

@@ -42,6 +42,9 @@ module.exports = class WorkerProxy {
   updateAppPreferences(model) {
     this.workerClient.rpc.call('updateAppPreferences', { model });
   }
+  updateWindowPreferences(model) {
+    this.workerClient.rpc.call('updateWindowPreferences', { model });
+  }
   updateThemePreferences(model) {
     this.workerClient.rpc.call('updateThemePreferences', { model });
   }

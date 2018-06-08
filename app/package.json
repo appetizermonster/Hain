@@ -37,6 +37,7 @@
     "lodash.assign": "^4.0.7",
     "lodash.clamp": "^4.0.2",
     "lodash.clonedeep": "^4.3.2",
+    "lodash.debounce": "^4.0.8",
     "lodash.find": "^4.3.0",
     "lodash.findindex": "^4.3.0",
     "lodash.first": "^3.0.0",
