@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/hainproject/hain.svg)](https://travis-ci.org/hainproject/hain)
 [![Join the chat at https://gitter.im/appetizermonster/hain](https://badges.gitter.im/appetizermonster/hain.svg)](https://gitter.im/appetizermonster/hain?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-An `alt+space` launcher for Windows, built with Electron.
+An <kbd>alt</kbd>+<kbd>space</kbd> launcher for Windows, built with Electron.
 
 I always dreamed of an alternative to Alfred on Windows, that is made with JavaScript.
 so, I made it.
@@ -27,7 +27,7 @@ I believe the strict syntax can provide more powerful and fast response than to 
 Go to [Releases](https://github.com/hainproject/hain/releases), then you can download prebuilt binaries.
 
 ## Usage
-Run and press `alt+space` anywhere.
+Run and press <kbd>alt</kbd>+<kbd>space</kbd> anywhere.
 
 ## Themes
 See [THEMES.md](THEMES.md)
