@@ -634,7 +634,9 @@ class AppContainer extends React.Component {
                 fontSize: '12px'
               }}
             >
-              <table style={{ width: '100%', borderSpacing: 0, userSelect: 'none' }}>
+              <table
+                style={{ width: '100%', borderSpacing: 0, userSelect: 'none' }}
+              >
                 <tr>
                   <td style={{ fontWeight: 700, fontSize: '14px' }}>Hain</td>
                   <td style={{ textAlign: 'right' }}>

@@ -8,7 +8,8 @@
     "build-debian": "gulp build-debian",
     "test": "eslint . --ext .js --ext .jsx && cd app && jest",
     "tdd": "cd app && jest --watch",
-    "lint": "eslint . --ext .js --ext .jsx"
+    "lint": "eslint . --ext .js --ext .jsx",
+    "lint-fix": "eslint . --ext .js --ext .jsx --fix"
   },
   "author": "Heejin Lee <monster@teamappetizer.com>",
   "license": "MIT",

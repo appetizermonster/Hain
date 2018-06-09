@@ -71,19 +71,30 @@ module.exports = class PrefWindow {
     try {
       vibrancyChanged =
         conf.SUPPORTED_PLATFORMS_VIBRANCY.includes(process.platform) &&
-        this.themeService.getThemeObj(preferencesOnOpen[conf.THEME_PREF_ID].activeTheme)
-          .themeObj.window.vibrancy !==
-          this.themeService.getThemeObj(preferencesOnClose[conf.THEME_PREF_ID].activeTheme)
-            .themeObj.window.vibrancy;
+        this.themeService.getThemeObj(
+          preferencesOnOpen[conf.THEME_PREF_ID].activeTheme
+        ).themeObj.window.vibrancy !==
+          this.themeService.getThemeObj(
+            preferencesOnClose[conf.THEME_PREF_ID].activeTheme
+          ).themeObj.window.vibrancy;
     } catch (e) {}
 
     // return true if any of the above settings have changed
-    return (windowDraggableChanged || rememberWindowPositionChanged || appTransparencyChanged || vibrancyChanged);
+    return (
+      windowDraggableChanged ||
+      rememberWindowPositionChanged ||
+      appTransparencyChanged ||
+      vibrancyChanged
+    );
   }
   _createAndShow(url) {
     const preferencesOnOpen = {};
-    preferencesOnOpen[conf.WINDOW_PREF_ID] = this.prefManager.getPreferences(conf.WINDOW_PREF_ID).model;
-    preferencesOnOpen[conf.THEME_PREF_ID] = this.prefManager.getPreferences(conf.THEME_PREF_ID).model;
+    preferencesOnOpen[conf.WINDOW_PREF_ID] = this.prefManager.getPreferences(
+      conf.WINDOW_PREF_ID
+    ).model;
+    preferencesOnOpen[conf.THEME_PREF_ID] = this.prefManager.getPreferences(
+      conf.THEME_PREF_ID
+    ).model;
 
     this.browserWindow = new BrowserWindow({
       width: 800,
@@ -104,15 +115,14 @@ module.exports = class PrefWindow {
 
       // check for changed settings that require a restart...
       const preferencesOnClose = {};
-      preferencesOnClose[conf.WINDOW_PREF_ID] = this.prefManager.getPreferences(conf.WINDOW_PREF_ID).model;
-      preferencesOnClose[conf.THEME_PREF_ID] = this.prefManager.getPreferences(conf.THEME_PREF_ID).model;
+      preferencesOnClose[conf.WINDOW_PREF_ID] = this.prefManager.getPreferences(
+        conf.WINDOW_PREF_ID
+      ).model;
+      preferencesOnClose[conf.THEME_PREF_ID] = this.prefManager.getPreferences(
+        conf.THEME_PREF_ID
+      ).model;
 
-      if (
-        !this._changeRequiresRestart(
-          preferencesOnOpen,
-          preferencesOnClose
-        )
-      ) {
+      if (!this._changeRequiresRestart(preferencesOnOpen, preferencesOnClose)) {
         // ...change does not require a restart, save preferences and close
         this.prefManager.commitPreferences();
         this.browserWindow = null;
@@ -124,7 +134,9 @@ module.exports = class PrefWindow {
       const clickedButton = dialog.showMessageBox({
         type: 'question',
         title: 'Change settings and restart?',
-        message: `Changing these settings requires ${conf.APP_NAME} to restart.`,
+        message: `Changing these settings requires ${
+          conf.APP_NAME
+        } to restart.`,
         buttons: [
           'Change settings and restart',
           'Revert to previous settings',

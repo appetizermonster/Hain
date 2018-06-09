@@ -26,14 +26,9 @@ function getDisplay(openOnDisplay) {
       selectedDisplay = display;
       break;
     }
-
   } else if (openOnDisplay) {
-    // specified screen ID
-    const displays = screen.getAllDisplays();
-
     // TODO: implement
     selectedDisplay = screen.getPrimaryDisplay();
-
   } else {
     // screen ID not set, so use primary display
     selectedDisplay = screen.getPrimaryDisplay();
@@ -43,8 +38,6 @@ function getDisplay(openOnDisplay) {
 }
 
 function positionWindowOnScreen(window, position, openOnDisplay) {
-  const selectedDisplay = getDisplay(openOnDisplay);
-
   window.setPosition(Math.round(position[0]), Math.round(position[1]));
 }
 

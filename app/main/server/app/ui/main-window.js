@@ -85,12 +85,14 @@ module.exports = class MainWindow {
 
     // process list of available displays into user-friendly list
     const displays = electron.screen.getAllDisplays();
-    let displayList = [];
+    const displayList = [];
 
-    for (let i in displays) {
+    for (const i in displays) {
       displayList.push([
         displays[i].id,
-        `Display ${(parseInt(i, 10) + 1)} (${displays[i].size.width}x${displays[i].size.height})`
+        `Display ${parseInt(i, 10) + 1} (${displays[i].size.width}x${
+          displays[i].size.height
+        })`
       ]);
     }
 
@@ -98,23 +100,28 @@ module.exports = class MainWindow {
     this.windowPref.schema.properties.display.properties.openOnSpecificDisplay.enum = displayList;
 
     // if the window is draggable and rememberWindowPosition is selected, observe window position changes and store in preferences
-    if (this.windowPref.get('windowDraggable') && this.windowPref.get('rememberWindowPosition')) {
-      browserWindow.on('move', lo_debounce((event) => {
-        const newPosition = browserWindow.getPosition();
+    if (
+      this.windowPref.get('windowDraggable') &&
+      this.windowPref.get('rememberWindowPosition')
+    ) {
+      browserWindow.on(
+        'move',
+        lo_debounce((event) => {
+          const newPosition = browserWindow.getPosition();
 
-        // if any position is less than 0 (for example when the window is hidden), do not continue
-        if (Math.min(...newPosition) < 0) {
-          return;
-        }
+          // if any position is less than 0 (for example when the window is hidden), do not continue
+          if (Math.min(...newPosition) < 0) {
+            return;
+          }
 
-        // set new position values into preferences
-        this.windowPref.model.position.posX = newPosition[0];
-        this.windowPref.model.position.posY = newPosition[1];
+          // set new position values into preferences
+          this.windowPref.model.position.posX = newPosition[0];
+          this.windowPref.model.position.posY = newPosition[1];
 
-        this.windowPref.update(this.windowPref.model);
-        this.windowPref.commit();
-
-      }, 250));
+          this.windowPref.update(this.windowPref.model);
+          this.windowPref.commit();
+        }, 250)
+      );
     }
 
     // store internal reference to created BrowserWindow object
@@ -179,13 +186,9 @@ module.exports = class MainWindow {
           ],
           openOnDisplay
         );
-
       } else {
         // set to stored previous position
-        windowUtil.centerWindowOnScreen(
-          this.browserWindow,
-          openOnDisplay
-        );
+        windowUtil.centerWindowOnScreen(this.browserWindow, openOnDisplay);
       }
     }
 
@@ -299,11 +302,13 @@ module.exports = class MainWindow {
         }
         ::-webkit-scrollbar-track {
           background-color: #eaeaea !important;
-          border-radius: ${themeObj.themeObj.scrollbar.thickness / 2}px !important;
+          border-radius: ${themeObj.themeObj.scrollbar.thickness /
+            2}px !important;
         }
         ::-webkit-scrollbar-thumb {
           background-color: ${themeObj.themeObj.scrollbar.color} !important;
-          border-radius: ${themeObj.themeObj.scrollbar.thickness / 2}px !important;
+          border-radius: ${themeObj.themeObj.scrollbar.thickness /
+            2}px !important;
         }
         ::-webkit-scrollbar-thumb:hover {
           background-color: #aaa !important;
