@@ -120,7 +120,7 @@ module.exports = class MainWindow {
 
           this.windowPref.update(this.windowPref.model);
           this.windowPref.commit();
-        }, 250)
+        }, 200)
       );
     }
 
@@ -178,14 +178,10 @@ module.exports = class MainWindow {
 
       if (positionWindow === 'specified') {
         // center the window in the middle of the screen
-        windowUtil.positionWindowOnScreen(
-          this.browserWindow,
-          [
-            this.windowPref.model.position.posX,
-            this.windowPref.model.position.posY
-          ],
-          openOnDisplay
-        );
+        windowUtil.positionWindowOnScreen(this.browserWindow, openOnDisplay, [
+          this.windowPref.model.position.posX,
+          this.windowPref.model.position.posY
+        ]);
       } else {
         // set to stored previous position
         windowUtil.centerWindowOnScreen(this.browserWindow, openOnDisplay);

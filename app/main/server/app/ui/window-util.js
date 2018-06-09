@@ -27,17 +27,26 @@ function getDisplay(openOnDisplay) {
       break;
     }
   } else if (openOnDisplay) {
-    // TODO: implement
-    selectedDisplay = screen.getPrimaryDisplay();
-  } else {
-    // screen ID not set, so use primary display
+    // specified screen ID, match ID against display object
+    const displays = screen.getAllDisplays();
+
+    for (const display of displays) {
+      if (display.id === openOnDisplay) {
+        selectedDisplay = display;
+        break;
+      }
+    }
+  }
+
+  if (!selectedDisplay) {
+    // display ID not found, set to primary display
     selectedDisplay = screen.getPrimaryDisplay();
   }
 
   return selectedDisplay;
 }
 
-function positionWindowOnScreen(window, position, openOnDisplay) {
+function positionWindowOnScreen(window, openOnDisplay, position) {
   window.setPosition(Math.round(position[0]), Math.round(position[1]));
 }
 
@@ -58,7 +67,7 @@ function centerWindowOnScreen(window, openOnDisplay) {
   position[1] -= windowSize[1] * 0.5;
 
   // initiate window move
-  positionWindowOnScreen(window, position, openOnDisplay);
+  positionWindowOnScreen(window, openOnDisplay, position);
 }
 
 module.exports = {
