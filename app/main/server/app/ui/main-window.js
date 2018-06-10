@@ -99,27 +99,31 @@ module.exports = class MainWindow {
     // set list of available displays into the preferences UI control
     this.windowPref.schema.properties.display.properties.openOnSpecificDisplay.enum = displayList;
 
-    // if the window is draggable and rememberWindowPosition is selected, observe window position changes and store in preferences
-    if (
-      this.windowPref.get('windowDraggable') &&
-      this.windowPref.get('rememberWindowPosition')
-    ) {
+    // if the window is draggable, observe window movement
+    if (this.windowPref.get('windowDraggable')) {
       browserWindow.on(
         'move',
         lo_debounce((event) => {
-          const newPosition = browserWindow.getPosition();
+          // refocus text input box
+          this.rpc.call('handleKeyboardFocus');
 
-          // if any position is less than 0 (for example when the window is hidden), do not continue
-          if (Math.min(...newPosition) < 0) {
-            return;
+          // if rememberWindowPosition is selected, observe window position changes and store in preferences
+          if (this.windowPref.get('rememberWindowPosition')) {
+            // get new window position
+            const newPosition = browserWindow.getPosition();
+
+            // if any position is less than 0 (for example when the window is hidden), do not continue
+            if (Math.min(...newPosition) < 0) {
+              return;
+            }
+
+            // set new position values into preferences
+            this.windowPref.model.position.posX = newPosition[0];
+            this.windowPref.model.position.posY = newPosition[1];
+
+            this.windowPref.update(this.windowPref.model);
+            this.windowPref.commit();
           }
-
-          // set new position values into preferences
-          this.windowPref.model.position.posX = newPosition[0];
-          this.windowPref.model.position.posY = newPosition[1];
-
-          this.windowPref.update(this.windowPref.model);
-          this.windowPref.commit();
         }, 200)
       );
     }
