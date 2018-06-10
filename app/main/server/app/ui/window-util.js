@@ -28,7 +28,9 @@ function getDisplay(openOnDisplay) {
     }
   } else if (openOnDisplay) {
     // specified screen ID, match ID against display object
-    selectedDisplay = screen.getAllDisplays().find((display) => display.id === openOnDisplay)
+    selectedDisplay = screen
+      .getAllDisplays()
+      .find((display) => display.id === openOnDisplay);
   }
 
   if (!selectedDisplay) {
