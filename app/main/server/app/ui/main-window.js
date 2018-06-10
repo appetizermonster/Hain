@@ -77,11 +77,6 @@ module.exports = class MainWindow {
       evt.preventDefault();
     });
     browserWindow.loadURL(`file://${__dirname}/../../../../dist/index.html`);
-    browserWindow.on('blur', () => {
-      if (browserWindow.webContents.isDevToolsOpened()) return;
-
-      this.hide(true);
-    });
 
     // process list of available displays into user-friendly list
     const displays = electron.screen.getAllDisplays();
@@ -99,7 +94,10 @@ module.exports = class MainWindow {
     // set list of available displays into the preferences UI control
     this.windowPref.schema.properties.display.properties.openOnSpecificDisplay.enum = displayList;
 
-    // if the window is draggable, observe window movement
+    // implement lock variable so that we do not attempt to save the window position when the hide event is fired (needed for MacOS)
+    let doNotSavePosition = false;
+
+    // if the window is draggable, observe window move event
     if (this.windowPref.get('windowDraggable')) {
       browserWindow.on(
         'move',
@@ -108,7 +106,10 @@ module.exports = class MainWindow {
           this.rpc.call('handleKeyboardFocus');
 
           // if rememberWindowPosition is selected, observe window position changes and store in preferences
-          if (this.windowPref.get('rememberWindowPosition')) {
+          if (
+            this.windowPref.get('rememberWindowPosition') &&
+            !doNotSavePosition
+          ) {
             // get new window position
             const newPosition = browserWindow.getPosition();
 
@@ -127,6 +128,22 @@ module.exports = class MainWindow {
         }, 200)
       );
     }
+
+    // observe window blur event
+    browserWindow.on('blur', () => {
+      if (browserWindow.webContents.isDevToolsOpened()) return;
+
+      // set lock variable
+      doNotSavePosition = true;
+
+      // hide the window
+      this.hide(true);
+
+      // reset lock variable
+      setTimeout(() => {
+        doNotSavePosition = false;
+      }, 500);
+    });
 
     // store internal reference to created BrowserWindow object
     this.browserWindow = browserWindow;
