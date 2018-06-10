@@ -108,6 +108,9 @@ class AppContainer extends React.Component {
     rpc.define('log', (payload) => {
       console.log(...payload);
     });
+    rpc.define('handleKeyboardFocus', () => {
+      this.handleKeyboardFocus();
+    });
     rpc.define('setQuery', (payload) => {
       this.setQuery(payload);
     });
@@ -116,13 +119,6 @@ class AppContainer extends React.Component {
     });
     rpc.define('requestAddResults', (__payload) => {
       const { ticket, type, payload } = __payload;
-
-      console.log(
-        'app.jsx -> rpc(requestAddResults), ticket=%s, type=%s, payload=%o',
-        ticket,
-        type,
-        payload
-      );
 
       if (searchTicket.current !== ticket) return;
 
