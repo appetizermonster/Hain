@@ -6,7 +6,7 @@ const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
 const packager = require('electron-packager');
 const path = require('path');
-const install = require('gulp-install');
+const yarn = require('gulp-yarn');
 const zip = require('gulp-zip');
 const electronInstaller = require('electron-winstaller');
 const fs = require('fs');
@@ -14,7 +14,7 @@ const del = require('del');
 const appPkg = require('./app/package.json');
 
 gulp.task('deps', () => {
-  return gulp.src('./app/package.json').pipe(install({ production: true }));
+  return gulp.src('./app/package.json').pipe(yarn({ production: true }));
 });
 
 gulp.task('clean:renderer', () => {

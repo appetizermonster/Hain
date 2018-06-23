@@ -36,6 +36,11 @@ See [THEMES.md](THEMES.md)
 
 See [Plugin Documentation](http://hainproject.github.io/hain/docs/)
 
+## Development Requirements
+
+- Node.js v8.9.0+
+- yarn v1.3.0+
+
 ## Install/Build from Source
 
 ```shell
