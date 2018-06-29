@@ -16,6 +16,7 @@ deploy:
   overwrite: true
   skip_cleanup: true
   draft: true
+  name: $TRAVIS_TAG
   on:
     repo: hainproject/hain
     tags: true
