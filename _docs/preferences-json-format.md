@@ -60,7 +60,7 @@ module.exports = (pluginContext) => {
   return { startup, search, execute };
 };
 ```
-See [PreferencesObject](preferences-object.md)
+See [PreferencesObject]({{ site.baseurl }}/docs/preferences-object/)
 
 ## Non-Standard Options
 
